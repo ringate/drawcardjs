@@ -1,0 +1,148 @@
+{
+  "awards": [
+    {
+      "name": "sleepaweek",
+      "desc": {
+        "short": "Zzzz...",
+        "long": "Sleep 7 Days."
+      },
+      "badge": {
+        "message": "Sleep more...",
+        "textcolor": "grey",
+        "bgcolor": "lightcyan"
+      },
+      "condition": {
+        "type": "counter",
+        "field": "sleep",
+        "operator": ">=",
+        "target": 7
+      }
+    },
+    {
+      "name": "draw100",
+      "desc": {
+        "short": "Draw",
+        "long": "Draw 100 Times."
+      },
+      "badge": {
+        "message": "Hahaha! Draw!",
+        "textcolor": "green",
+        "bgcolor": "ivory"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "draw",
+        "operator": ">=",
+        "target": 100
+      }
+    },
+    {
+      "name": "draw500",
+      "desc": {
+        "short": "Draw",
+        "long": "Draw 500 Times."
+      },
+      "badge": {
+        "message": "Draw~~!",
+        "textcolor": "white",
+        "bgcolor": "green"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "draw",
+        "operator": ">=",
+        "target": 500
+      }
+    },
+    {
+      "name": "draw1000",
+      "desc": {
+        "short": "Draw",
+        "long": "Draw 1,000 Times."
+      },
+      "badge": {
+        "message": "Diu...",
+        "textcolor": "yellow",
+        "bgcolor": "purple"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "draw",
+        "operator": ">=",
+        "target": 1000
+      }
+    },
+    {
+      "name": "dead1",
+      "desc": {
+        "short": "Dead",
+        "long": "Dead First Times."
+      },
+      "badge": {
+        "message": "First blood!",
+        "textcolor": "red",
+        "bgcolor": "mistyrose"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "dead",
+        "operator": ">=",
+        "target": 1
+      }
+    },
+    {
+      "name": "dead10",
+      "desc": {
+        "short": "Dead",
+        "long": "Dead 10 Times."
+      },
+      "badge": {
+        "message": "Reload.",
+        "textcolor": "red",
+        "bgcolor": "green"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "dead",
+        "operator": ">=",
+        "target": 10
+      }
+    },
+    {
+      "name": "dead50",
+      "desc": {
+        "short": "Dead",
+        "long": "Dead 50 Times."
+      },
+      "badge": {
+        "message": "No painful.",
+        "textcolor": "red",
+        "bgcolor": "yellow"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "dead",
+        "operator": ">=",
+        "target": 50
+      }
+    },
+    {
+      "name": "dead100",
+      "desc": {
+        "short": "Dead",
+        "long": "Dead 100 Times."
+      },
+      "badge": {
+        "message": "I am Zombie.",
+        "textcolor": "red",
+        "bgcolor": "purple"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "dead",
+        "operator": ">=",
+        "target": 100
+      }
+    }
+  ]
+}
