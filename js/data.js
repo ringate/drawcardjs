@@ -25,7 +25,7 @@ var rules = {
   heal1: HEAL_LEVEL1,
   heal2: HEAL_LEVEL2,
   wincardneed: WIN_CARDNEED
-}
+};
 var player = {
   alive: 1
 };
@@ -84,6 +84,14 @@ var awards = {
   lucky: 0,
   superluck: 0,
   impossibleluck: 0
+};
+var upgrade = {
+  reducedamage1: 0,
+  reducedamage2: 0,
+  reduceenergy1: 0,
+  reduceenergy2: 0,
+  redrawn: 0,
+  redrawnr: 0
 };
 var originaldata = {};
 var awardinfo = {};

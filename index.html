@@ -11,60 +11,100 @@
 <link rel="stylesheet" href="css/styles.css" type="text/css" />
 </head>
 <body>
-<ul id="command-list">
-  <li id="draw" class="mode">Draw</li>
-  <li id="draw10" class="mode">Draw 10</li>
-  <li id="sleep" class="mode">Sleep</li>
-  <li id="heal" class="mode">Heal</li>
-  <li id="recover" class="mode">Recover</li>
-  <li id="save" class="mode">Save</li>
-  <li id="load" class="mode">Load</li>
-  <li id="clearlogs">Clear Logs</li>
-  <li id="reset">Reset</li>
-  <li id="hard-reset">Hard Reset</li>
-</ul>
-<hr />
-<ul id="item-list">
-</ul>
-<hr />
-<div id="status-list">
-  <div id="dayused">
-    <div class="level"></div>
-    <div class="bar"></div>
-  </div>
-  <div id="energy">
-    <div class="level"></div>
-    <div class="bar"></div>
-  </div>
-  <div id="damage">
-    <div class="level"></div>
-    <div class="bar"></div>
-  </div>
-  <div class="clear"></div>
-</div>
-<hr />
-<div id="lastmsg"></div>
-<hr />
-<ul id="badge-list">
-</ul>
-<div id="badge-info"></div>
-<hr />
-<div id="todo-list">
-  <ul>
-    <li><s>[v0.2] Add save/load system.</s></li>
-    <li><s>[v0.2] Add badge message.</s></li>
-    <li><s>[v0.2] Enhance message box with colors.</s></li>
-    <li><s>[v0.2] Change hardcode awards logic to JSON.</s></li>
-    <li><s>[v0.2] Dynamic data handling in both layout and coding.</s></li>
-    <li><s>[v0.2] Change hardcode values to variables.</s></li>
-    <li>[v0.3] Add new variables for affect cards drop rate or others.</li>
-    <li>[v0.4] Add talent system.</li>
-    <li>[v0.5] Add item system.</li>
-    <li>[v0.6] Add shop system for exchange cards to items.</li>
+<div class="column">
+  <ul id="command-list">
+    <li id="draw" class="mode">Draw</li>
+    <li id="draw10" class="mode">Draw 10</li>
+    <li id="sleep" class="mode">Sleep</li>
+    <li id="heal" class="mode">Heal</li>
+    <li id="recover" class="mode">Recover</li>
   </ul>
+  <ul id="command-list2">
+    <li id="save" class="mode">Save</li>
+    <li id="load">Load</li>
+    <li id="clearlogs">Clear Logs</li>
+    <li id="reset">Reset</li>
+    <li id="hard-reset">Hard Reset</li>
+  </ul>
+  <hr />
+  <ul id="item-list">
+  </ul>
+  <hr />
+  <div id="status-list">
+    <div id="dayused">
+      <div class="level"></div>
+      <div class="bar"></div>
+    </div>
+    <div id="energy">
+      <div class="level"></div>
+      <div class="bar"></div>
+    </div>
+    <div id="damage">
+      <div class="level"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="clear"></div>
+  </div>
+  <hr />
+  <div id="lastmsg"></div>
+  <hr />
+  <div id="upgrade-list">
+    <div id="reducedamage1">
+      <div class="button">Lv 1</div>
+      <div class="desc">Be Strengthen I - Reduce Damage</div>
+      <div class="clear"></div>
+    </div>
+    <div id="reducedamage2">
+      <div class="button">Lv 2</div>
+      <div class="desc">Be Strengthen II - Reduce Damage</div>
+      <div class="clear"></div>
+    </div>
+    <div id="reduceenergy1">
+      <div class="button">Lv 1</div>
+      <div class="desc">Saving Energy I - Reduce Energy</div>
+      <div class="clear"></div>
+    </div>
+    <div id="reduceenergy2">
+      <div class="button">Lv 2</div>
+      <div class="desc">Saving Energy II - Reduce Energy</div>
+      <div class="clear"></div>
+    </div>
+    <div id="redrawn">
+      <div class="button">N</div>
+      <div class="desc">Very small chance to Redraw if got N card</div>
+      <div class="clear"></div>
+    </div>
+    <div id="redrawnr">
+      <div class="button">N/R</div>
+      <div class="desc">Very small chance to Redraw if got N/R card</div>
+      <div class="clear"></div>
+    </div>
+  </div>
+  <hr />
+  <ul id="badge-list">
+  </ul>
+  <div id="badge-info"></div>
+  <hr />
 </div>
-<hr />
-<div id="log"></div>
+<div class="column">
+  <div id="todo-list">
+    <ul>
+      <li><s>[v0.2] Add save/load system.</s></li>
+      <li><s>[v0.2] Add badge message.</s></li>
+      <li><s>[v0.2] Enhance message box with colors.</s></li>
+      <li><s>[v0.2] Change hardcode awards logic to JSON.</s></li>
+      <li><s>[v0.2] Dynamic data handling in both layout and coding.</s></li>
+      <li><s>[v0.2] Change hardcode values to variables.</s></li>
+      <li>[v0.3] Add new variables for affect cards drop rate or others.</li>
+      <li>[v0.4] Add talent system.</li>
+      <li>[v0.5] Add item system.</li>
+      <li>[v0.6] Add shop system for exchange cards to items.</li>
+    </ul>
+  </div>
+  <hr />
+  <div id="log"></div>
+</div>
+<div class="clear"></div>
 
 <script src="js/init.js"></script>
 <script src="js/handler.js"></script>

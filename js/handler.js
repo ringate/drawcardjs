@@ -17,6 +17,7 @@ $('#save').on('click', function() {
   dataSave();
 });
 $('#load').on('click', function() {
+  roundReset();
   dataLoad();
 });
 $('#clearlogs').on('click', function() {
@@ -27,4 +28,10 @@ $('#reset').on('click', function() {
 });
 $('#hard-reset').on('click', function() {
   worldReset();
+});
+$('#upgrade-list .button').on('click', function() {
+  var toggle = worldUpgrade($(this).parent().attr('id'));
+  if (toggle) {
+    $(this).css({'background-color': '#1BD', 'color': '#FFF'});
+  }
 });

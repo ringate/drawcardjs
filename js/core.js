@@ -120,10 +120,16 @@ function recoverRestore() {
   }
 }
 
+function worldUpgrade(factor) {
+  upgrade[factor] = 1;
+  return true;
+}
+
 function worldReset() {
   $('#badge-list li.showup').removeClass('showup');
   badgeInfo('');
   lifetime = $.extend(true, {}, originaldata.lifetime);
+  upgrade = $.extend(true, {}, originaldata.upgrade);
   awards = $.extend(true, {}, originaldata.awards);
   roundReset();
   eraseCookie('playerstatus');
@@ -134,14 +140,15 @@ function worldReset() {
 function limitCheck() {
   if (ps.energy > rules.maxenergy) ps.energy = rules.maxenergy;
   if (ps.damage < 0) ps.damage = 0;
-  if (ps.damage > rules.maxdur) {
+
+  if (ps.damage >= rules.maxdur) {
     ps.damage = rules.maxdur;
     player.alive = 0;
     lifetime.dead += 1;
     dataAwardsSave();
     messageUpdate('Die by overtaken damages.','#F66');
   }
-  if (ps.energy < 0) {
+  if (ps.energy <= 0) {
     ps.energy = 0;
     player.alive = 0;
     lifetime.dead += 1;
@@ -233,6 +240,7 @@ function dataSave() {
 function dataAwardsSave() {
   var statisticdata = {
     lifetime: lifetime,
+    upgrade: upgrade,
     awards: awards
   }
   var enc = btoa(JSON.stringify(statisticdata));
@@ -243,7 +251,6 @@ function dataLoad() {
   var enc = readCookie("playerstatus");
   if (enc != null) {
     var dnc = $.parseJSON(atob(enc));
-    console.log(dnc);
     player = dnc.player;
     items = dnc.items;
     ps = dnc.ps;
@@ -252,6 +259,7 @@ function dataLoad() {
     if (enc2 != null) {
       var dnc2 = $.parseJSON(atob(enc2));
       lifetime = dnc2.lifetime;
+      upgrade = dnc2.upgrade;
       awards = dnc2.awards;
       limitCheck();
       itemUpdate();
@@ -270,7 +278,30 @@ function initOriginal() {
   originaldata.ps = $.extend(true, {}, ps);
   originaldata.counter = $.extend(true, {}, counter);
   originaldata.lifetime = $.extend(true, {}, lifetime);
+  originaldata.upgrade = $.extend(true, {}, upgrade);
   originaldata.awards = $.extend(true, {}, awards);
+}
+
+function initItems() {
+  for (var label in items) {
+    var elem = $('<li></li>').html('<label>' + label.toUpperCase() + '</label><br /><span></span>').attr('id','card' + label);
+    $('#item-list').append(elem);
+  }
+}
+
+function initAwards(type, hash) {
+  $.get({
+    url: 'ajax.php',
+    data: { type: type, hash: hash },
+  }).done(function(data) {
+    awardinfo = $.parseJSON(data);
+    for (var i = 0; i < awardinfo.awards.length; i++) {
+      var elem = $('<li></li>').text(awardinfo.awards[i].desc.short).attr('id',awardinfo.awards[i].name).css({'color':awardinfo.awards[i].badge.textcolor,'background-color':awardinfo.awards[i].badge.bgcolor});
+      $('#badge-list').append(elem);
+    }
+    roundReset();
+    dataLoad();
+  });
 }
 
 function roundReset() {
@@ -285,30 +316,9 @@ function roundReset() {
   logClear();
 }
 
-function initAwards(type, hash) {
-  $.get({
-    url: 'ajax.php',
-    data: { type: type, hash: hash },
-  }).done(function(data) {
-    awardinfo = $.parseJSON(data);
-    for (var i = 0; i < awardinfo.awards.length; i++) {
-      var elem = $('<li></li>').text(awardinfo.awards[i].desc.short).attr('id',awardinfo.awards[i].name).css({'color':awardinfo.awards[i].badge.textcolor,'background-color':awardinfo.awards[i].badge.bgcolor});
-      $('#badge-list').append(elem);
-    }
-  });
-}
-
-function initItems() {
-  for (var label in items) {
-    var elem = $('<li></li>').html('<label>' + label.toUpperCase() + '</label><br /><span></span>').attr('id','card' + label);
-    $('#item-list').append(elem);
-  }
-}
-
 function runOnce() {
   initOriginal();
   initItems();
   initAwards('custom','95e777b1daaacd8870c480bb35293b53754e5e832896260b863f41e52ac05edf');
-  roundReset();
 }
 /*****  Start Game Init  *****/
