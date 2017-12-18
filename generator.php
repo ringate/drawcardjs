@@ -6,4 +6,6 @@ echo '<br />';
 echo codegen(10);
 echo '<br />';
 echo codegen('awards');
+echo '<br />';
+echo codegen('upgrades');
 ?>

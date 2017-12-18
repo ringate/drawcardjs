@@ -30,8 +30,5 @@ $('#hard-reset').on('click', function() {
   worldReset();
 });
 $('#upgrade-list .button').on('click', function() {
-  var toggle = worldUpgrade($(this).parent().attr('id'));
-  if (toggle) {
-    $(this).css({'background-color': '#1BD', 'color': '#FFF'});
-  }
+  worldUpgrade($(this).parent().attr('id'));
 });

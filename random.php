@@ -1,5 +1,5 @@
 <?php
-function rand_sum($pool, $time = 1) {
+function rand_sum($pool, $time = 1, $level = 0) {
   $result = '';
   if (!is_array($pool)) return $result;
   if (count($pool) == 0) return $result;
@@ -10,14 +10,20 @@ function rand_sum($pool, $time = 1) {
     }
   }
   shuffle($box);
-  for ($i = 0; $i < $time; $i++) {
-    $result .= $box[$i] . ',';
+  $j = 0;
+  for ($i = 0; $i < count($box); $i++) {
+    if ($j < $time) {
+      $result .= $box[$i] . ',';
+      $j++;
+    } else {
+      break;
+    }
   }
   $result = substr($result, 0, -1);
   return $result;
 }
 
-function rand_percent($pool, $time = 1) {
+function rand_percent($pool, $time = 1, $level = 0) {
   $result = '';
   if (!is_array($pool)) return $result;
   if (count($pool) == 0) return $result;

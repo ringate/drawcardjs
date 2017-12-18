@@ -11,6 +11,13 @@ let HEAL_LEVEL1 = 15;
 let HEAL_LEVEL2 = 100;
 let WIN_CARDNEED = 100;
 
+let DAMAGE_LV_UP1 = 1;
+let DAMAGE_LV_UP2 = 2;
+let DAMAGE_LV_UP3 = 3;
+let ENERGY_LV_UP1 = 1;
+let ENERGY_LV_UP2 = 1;
+let ENERGY_LV_UP3 = 1;
+
 var c = 1;
 var rules = {
   damage: DAMAGE,
@@ -88,10 +95,16 @@ var awards = {
 var upgrade = {
   reducedamage1: 0,
   reducedamage2: 0,
+  reducedamage3: 0,
   reduceenergy1: 0,
   reduceenergy2: 0,
+  reduceenergy3: 0,
+  talentunlock1: 0,
+  talentunlock2: 0,
+  talentunlock3: 0,
   redrawn: 0,
   redrawnr: 0
 };
 var originaldata = {};
 var awardinfo = {};
+var upgradeinfo = {};

@@ -22,6 +22,14 @@ function awardsUpdate() {
     }
   }
 }
+
+function upgradeUpdate() {
+  Object.keys(upgrade).forEach(function(factor) {
+    if (upgrade[factor]) {
+      $('#' + factor).css({'background-color': '#DEF'});
+    }
+  });
+}
 /*****  Frontend Game Data Update  *****/
 
 /*****  Frontend Message Handling  *****/
@@ -46,10 +54,14 @@ function logClear() {
 /*****  Game Logic  *****/
 /*****  Core Game Function  *****/
 function cardDraw(type, hash) {
+  var level = 0;
+  if (upgrade.redrawn) level++;
+  if (upgrade.redrawnr) level++;
   $.get({
     url: 'ajax.php',
-    data: { type: type, hash: hash },
+    data: { type: type, hash: hash, level: level },
   }).done(function(card) {
+    if (card == 'error') return false;
     if (card.indexOf(',') != -1) {
       var cards = card.split(',');
       lifetime.draw += cards.length;
@@ -120,9 +132,62 @@ function recoverRestore() {
   }
 }
 
+function findUpgrade(factor) {
+    return $.grep(upgradeinfo.upgrades, function(upgrade, i) {
+      return upgrade.name == factor;
+    });
+}
+
 function worldUpgrade(factor) {
-  upgrade[factor] = 1;
-  return true;
+  if (!upgrade[factor]) {
+    var requirements = findUpgrade(factor)[0];
+    if (typeof requirements.require == 'object') {
+      var enabled = requirements.require.enabled;
+      if (enabled.indexOf(',') == -1) {
+        if (!upgrade[enabled]) {
+          messageUpdate('Need upgrade first: ' + requirements.desc.long);
+          return false;
+        }
+      } else {
+        var enabledlist = enabled.split(',');
+        for (var i = 0; i < enabledlist.length; i++) {
+          if (!upgrade[enabledlist[i]]) {
+            messageUpdate('Need upgrade first: ' + findUpgrade(enabledlist[i])[0].desc.long);
+            return false;
+          }
+        }
+      }
+    }
+    if (requirements.condition.operator == '>=') {
+      if (this[requirements.condition.type][requirements.condition.field] >= requirements.condition.target) {
+      	this[requirements.condition.type][requirements.condition.field] -= requirements.condition.target;
+        upgrade[requirements.name] = 1;
+        //dataSave();
+        //dataAwardsSave();
+        $('#' + requirements.name).css({'background-color': '#DEF'});
+        messageUpdate(requirements.desc.long,requirements.color.text,requirements.color.background);
+        itemUpdate();
+        return true;
+      } else {
+        messageUpdate('Need ' + requirements.condition.target + ' ' + requirements.condition.field.toUpperCase() + ' Cards.');
+      }
+    } else if (requirements.condition.operator == '<=') {
+      if (this[requirements.condition.type][requirements.condition.field] <= requirements.condition.target) {
+      	this[requirements.condition.type][requirements.condition.field] += requirements.condition.target;
+        upgrade[requirements.name] = 1;
+        //dataSave();
+        //dataAwardsSave();
+        $('#' + requirements.name).css({'background-color': '#DEF'});
+        messageUpdate(requirements.desc.long,requirements.color.text,requirements.color.background);
+        itemUpdate();
+        return true;
+      } else {
+        messageUpdate('Need ' + requirements.condition.target + ' ' + requirements.condition.field.toUpperCase() + ' Cards.');
+      }
+    }
+  } else {
+    return false;
+  }
 }
 
 function worldReset() {
@@ -294,13 +359,29 @@ function initAwards(type, hash) {
     url: 'ajax.php',
     data: { type: type, hash: hash },
   }).done(function(data) {
+    if (data == 'error') return false;
     awardinfo = $.parseJSON(data);
     for (var i = 0; i < awardinfo.awards.length; i++) {
       var elem = $('<li></li>').text(awardinfo.awards[i].desc.short).attr('id',awardinfo.awards[i].name).css({'color':awardinfo.awards[i].badge.textcolor,'background-color':awardinfo.awards[i].badge.bgcolor});
       $('#badge-list').append(elem);
     }
-    roundReset();
-    dataLoad();
+  });
+}
+
+function initUpgrades(type, hash) {
+  $.get({
+    url: 'ajax.php',
+    data: { type: type, hash: hash },
+  }).done(function(data) {
+    if (data == 'error') return false;
+    upgradeinfo = $.parseJSON(data);
+    for (var i = 0; i < upgradeinfo.upgrades.length; i++) {
+      var elem = $('<div></div>').attr('id',upgradeinfo.upgrades[i].name);
+      $('#upgrade-list').append(elem);
+      $('<div class="button">' + upgradeinfo.upgrades[i].desc.short + '</div>').css({'color':upgradeinfo.upgrades[i].color.text,'background-color':upgradeinfo.upgrades[i].color.background}).appendTo('#' + upgradeinfo.upgrades[i].name);
+      $('<div class="desc">' + upgradeinfo.upgrades[i].desc.long + '</div>').appendTo('#' + upgradeinfo.upgrades[i].name);
+      $('#' + upgradeinfo.upgrades[i].name).append('<div class="clear"></div>');
+    }
   });
 }
 
@@ -313,12 +394,17 @@ function roundReset() {
   messageUpdate('Welcome!');
   itemUpdate();
   statusUpdate();
+  upgradeUpdate();
   logClear();
 }
 
 function runOnce() {
+  $.ajaxSetup({async:false});
   initOriginal();
   initItems();
   initAwards('custom','95e777b1daaacd8870c480bb35293b53754e5e832896260b863f41e52ac05edf');
+  initUpgrades('custom','ee943dc49fcbfff114b8e5772951cddb2f5204a5d5c6379d3f609261c6db34b9');
+  roundReset();
+  dataLoad();
 }
 /*****  Start Game Init  *****/

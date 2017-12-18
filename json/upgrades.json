@@ -1,0 +1,212 @@
+{
+  "upgrades": [
+    {
+      "name": "reducedamage1",
+      "desc": {
+        "short": "LV1",
+        "long": "Be Strengthen I - Reduce Damage"
+      },
+      "color": {
+        "text": "white",
+        "background": "pink"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 10
+      }
+    },
+    {
+      "name": "reducedamage2",
+      "desc": {
+        "short": "LV2",
+        "long": "Be Strengthen II - Reduce Damage"
+      },
+      "color": {
+        "text": "white",
+        "background": "coral"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 30
+      },
+      "require": {
+        "enabled": "reducedamage1"
+      }
+    },
+    {
+      "name": "reducedamage3",
+      "desc": {
+        "short": "LV3",
+        "long": "Be Strengthen III - Reduce Damage"
+      },
+      "color": {
+        "text": "white",
+        "background": "red"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 70
+      },
+      "require": {
+        "enabled": "reducedamage1,reducedamage2"
+      }
+    },
+    {
+      "name": "reduceenergy1",
+      "desc": {
+        "short": "LV1",
+        "long": "Saving Energy I - Reduce Energy"
+      },
+      "color": {
+        "text": "black",
+        "background": "lightcyan"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 10
+      }
+    },
+    {
+      "name": "reduceenergy2",
+      "desc": {
+        "short": "LV2",
+        "long": "Saving Energy II - Reduce Energy"
+      },
+      "color": {
+        "text": "white",
+        "background": "cyan"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 30
+      },
+      "require": {
+        "enabled": "reduceenergy1"
+      }
+    },
+    {
+      "name": "reduceenergy3",
+      "desc": {
+        "short": "LV3",
+        "long": "Saving Energy III - Reduce Energy"
+      },
+      "color": {
+        "text": "white",
+        "background": "dodgerblue"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 70
+      },
+      "require": {
+        "enabled": "reduceenergy1,reduceenergy2"
+      }
+    },
+    {
+      "name": "talentunlock1",
+      "desc": {
+        "short": "LV1",
+        "long": "Talent I - Unlocked"
+      },
+      "color": {
+        "text": "black",
+        "background": "cornsilk"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 15
+      }
+    },
+    {
+      "name": "talentunlock2",
+      "desc": {
+        "short": "LV2",
+        "long": "Talent II - Unlocked"
+      },
+      "color": {
+        "text": "black",
+        "background": "khaki"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 30
+      },
+      "require": {
+        "enabled": "talentunlock1"
+      }
+    },
+    {
+      "name": "talentunlock3",
+      "desc": {
+        "short": "LV3",
+        "long": "Talent III - Unlocked"
+      },
+      "color": {
+        "text": "black",
+        "background": "gold"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 45
+      },
+      "require": {
+        "enabled": "talentunlock1,talentunlock2"
+      }
+    },
+    {
+      "name": "redrawn",
+      "desc": {
+        "short": "N",
+        "long": "Small chance to redraw if got N card"
+      },
+      "color": {
+        "text": "white",
+        "background": "silver"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 50
+      }
+    },
+    {
+      "name": "redrawnr",
+      "desc": {
+        "short": "R",
+        "long": "Small chance to redraw if got N/R card"
+      },
+      "color": {
+        "text": "white",
+        "background": "gray"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 100
+      },
+      "require": {
+        "enabled": "redrawn"
+      }
+    }
+  ]
+}

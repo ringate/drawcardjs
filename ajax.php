@@ -14,16 +14,30 @@ if ( (isset($_GET['type'])) && (!empty($_GET['type'])) ) {
       case codegen(1): $poolname .= ''; break;
       case codegen(10): $poolname .= '10'; break;
       case codegen('awards'): $poolname .= 'awards'; break;
+      case codegen('upgrades'): $poolname .= 'upgrades'; break;
     }
+  }
+  if (empty($poolname)) {
+    echo 'error';
+    exit;
   }
 
   $jsonpath = 'json/';
   $jsonfile = $poolname . '.json';
+  if (!file_exists($jsonpath . $jsonfile)) {
+    echo 'error';
+    exit;
+  }
   $rawdata = file_get_contents($jsonpath . $jsonfile);
 
   if ($drawtype == 'custom') {
     echo $rawdata;
     exit;
+  }
+
+  $drawlevel = 0;
+  if ( (isset($_GET['level'])) && (!empty($_GET['level'])) ) {
+    $drawlevel = int_filter($_GET['level']);
   }
 
   $json = json_decode($rawdata, true);
@@ -32,8 +46,8 @@ if ( (isset($_GET['type'])) && (!empty($_GET['type'])) ) {
     $time = (isset($json['time'])) ? $json['time'] : 1;
     $time = time_validate($time);
     switch ($json['type']) {
-      case "sum": $result = rand_sum($json['pool'], $time); break;
-      case "percent": $result = rand_percent($json['pool'], $time); break;
+      case "sum": $result = rand_sum($json['pool'], $time, $drawlevel); break;
+      case "percent": $result = rand_percent($json['pool'], $time, $drawlevel); break;
       default: $result = '';
     }
   }
