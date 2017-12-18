@@ -3,15 +3,13 @@
 */
 * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; outline: none; }
 body { font-family: Sans, sans-serif; -webkit-font-smoothing: antialiased; padding: 0px; margin: 0px; }
-#command-list, #command-list2, #item-list, #badge-list { list-style-type: none; padding: 0px; border: 1px solid #666; }
+#command-list, #command-list2, #item-list, #badge-list { list-style-type: none; margin: 5px 0px; padding: 0px; border: 1px solid #666; }
 #command-list li, #command-list2 li, #item-list li, #badge-list li { display: inline-block; font-size: 15px; text-align: center; margin: 3px; padding: 3px 10px; border: 1px solid #666; cursor: pointer; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
 #badge-list { margin: 0px; padding: 0px; }
 #badge-list li { display: none; width: 60px; }
 #badge-list li.showup { display: inline-block; }
 #status-list, #todo-list, #upgrade-list, #upgrade-list > div { border: 1px solid #666; }
-#upgrade-list div { margin: 3px; }
-#upgrade-list .button, #upgrade-list .desc { float: left; padding: 3px; }
-#upgrade-list .button { border: 1px solid #666; text-align: center; width: 50px; cursor: pointer; }
+.status-title { float: left; width: 100px; text-align: center; margin: 3px; }
 #dayused, #energy, #damage { float: left; width: 100px; border: 1px solid #666; position: relative; margin: 3px; }
 #dayused:after, #energy:after, #damage:after { content: "."; visibility: hidden; }
 #dayused .level, #energy .level, #damage .level { width: 100%; text-align: center; color: #000; z-index: 20; position: absolute; }
@@ -20,6 +18,9 @@ body { font-family: Sans, sans-serif; -webkit-font-smoothing: antialiased; paddi
 #energy .bar { background-color: #0F0; }
 #damage .bar { background-color: #F66; }
 #dayused .bar:after, #energy .bar:after, #damage .bar:after { content: "."; visibility: hidden; }
+#upgrade-list div { margin: 3px; }
+#upgrade-list .button, #upgrade-list .desc { float: left; padding: 3px; }
+#upgrade-list .button { border: 1px solid #666; text-align: center; width: 50px; cursor: pointer; }
 #lastmsg, #badge-info { border: 1px solid #666; padding: 3px; }
 .column { float: left; width: 40%; box-sizing: border-box; border: 1px solid #000; margin: 10px; padding: 10px; }
 .clear { clear: both; }

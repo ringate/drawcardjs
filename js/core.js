@@ -52,7 +52,11 @@ function logClear() {
 /*****  Frontend Update  *****/
 
 /*****  Game Logic  *****/
-/*****  Core Game Function  *****/
+/*****  Core Game Functions  *****/
+function getRandom(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function cardDraw(type, hash) {
   var level = 0;
   if (upgrade.redrawn) level++;
@@ -80,12 +84,25 @@ function cardDraw(type, hash) {
   });
 }
 
+function worldReset() {
+  $('#badge-list li.showup').removeClass('showup');
+  badgeInfo('');
+  lifetime = $.extend(true, {}, originaldata.lifetime);
+  upgrade = $.extend(true, {}, originaldata.upgrade);
+  awards = $.extend(true, {}, originaldata.awards);
+  roundReset();
+  eraseCookie('playerstatus');
+}
+/*****  Core Game Functions  *****/
+
+/*****  Energy Using Logic  *****/
 function energyUse(card) {
+  var drawEnergy = energyRevise();
   if (card.indexOf(',') != -1) {
     var cards = card.split(',');
-    ps.energy -= cards.length * rules.drawcard;
+    ps.energy -= cards.length * drawEnergy;
   } else {
-    ps.energy -= rules.drawcard;
+    ps.energy -= drawEnergy;
   }
 }
 
@@ -100,7 +117,7 @@ function sleepRestore() {
     }
     awardsCheck();
   }
-  ps.energy += rules.sleeprecover;
+  ps.energy += rules.sleeprecover + getRandom(-10,10);
   messageUpdate('Restored some energy.');
   limitCheck();
   statusUpdate();
@@ -109,11 +126,12 @@ function sleepRestore() {
 function healRestore() {
   if (items.n >= rules.healcard1) {
     items.n -= rules.healcard1;
-    ps.damage -= rules.heal1;
+    var healValue = rules.heal1 + getRandom(0,5);
+    ps.damage -= healValue;
     limitCheck();
     itemUpdate();
     statusUpdate();
-    messageUpdate('Reduced ' + rules.heal1 + ' damage.','green');
+    messageUpdate('Reduced ' + healValue + ' damages.','green');
   } else {
     messageUpdate('At least ' + rules.healcard1 + ' N card for heal.');
   }
@@ -126,12 +144,14 @@ function recoverRestore() {
     limitCheck();
     itemUpdate();
     statusUpdate();
-    messageUpdate('Reduced ' + rules.heal2 + ' damage.','purple');
+    messageUpdate('Reduced ' + rules.heal2 + ' damages.','purple');
   } else {
     messageUpdate('At least ' + rules.healcard2 + ' R card for recover.');
   }
 }
+/*****  Energy Using Logic  *****/
 
+/*****  Upgrade Handler Logic  *****/
 function findUpgrade(factor) {
     return $.grep(upgradeinfo.upgrades, function(upgrade, i) {
       return upgrade.name == factor;
@@ -162,8 +182,8 @@ function worldUpgrade(factor) {
       if (this[requirements.condition.type][requirements.condition.field] >= requirements.condition.target) {
       	this[requirements.condition.type][requirements.condition.field] -= requirements.condition.target;
         upgrade[requirements.name] = 1;
-        //dataSave();
-        //dataAwardsSave();
+        dataSave();
+        dataLifeTimeSave();
         $('#' + requirements.name).css({'background-color': '#DEF'});
         messageUpdate(requirements.desc.long,requirements.color.text,requirements.color.background);
         itemUpdate();
@@ -175,8 +195,8 @@ function worldUpgrade(factor) {
       if (this[requirements.condition.type][requirements.condition.field] <= requirements.condition.target) {
       	this[requirements.condition.type][requirements.condition.field] += requirements.condition.target;
         upgrade[requirements.name] = 1;
-        //dataSave();
-        //dataAwardsSave();
+        dataSave();
+        dataLifeTimeSave();
         $('#' + requirements.name).css({'background-color': '#DEF'});
         messageUpdate(requirements.desc.long,requirements.color.text,requirements.color.background);
         itemUpdate();
@@ -189,17 +209,25 @@ function worldUpgrade(factor) {
     return false;
   }
 }
+/*****  Upgrade Handler Logic  *****/
 
-function worldReset() {
-  $('#badge-list li.showup').removeClass('showup');
-  badgeInfo('');
-  lifetime = $.extend(true, {}, originaldata.lifetime);
-  upgrade = $.extend(true, {}, originaldata.upgrade);
-  awards = $.extend(true, {}, originaldata.awards);
-  roundReset();
-  eraseCookie('playerstatus');
+/*****  Upgrade Revise Logic  *****/
+function damageRevise() {
+  var nDamage = rules.damage;
+  if (upgrade.reducedamage1) nDamage -= DAMAGE_LV_UP1;
+  if (upgrade.reducedamage2) nDamage -= DAMAGE_LV_UP2;
+  if (upgrade.reducedamage3) nDamage -= DAMAGE_LV_UP3;
+  return nDamage;
 }
-/*****  Core Game Function  *****/
+
+function energyRevise() {
+  var nEnergy = rules.drawcard;
+  if (upgrade.reduceenergy1) nEnergy -= ENERGY_LV_UP1;
+  if (upgrade.reduceenergy2) nEnergy -= ENERGY_LV_UP2;
+  if (upgrade.reduceenergy3) nEnergy -= ENERGY_LV_UP3;
+  return nEnergy;
+}
+/*****  Upgrade Revise Logic  *****/
 
 /*****  Data Logic Checking  *****/
 function limitCheck() {
@@ -210,7 +238,7 @@ function limitCheck() {
     ps.damage = rules.maxdur;
     player.alive = 0;
     lifetime.dead += 1;
-    dataAwardsSave();
+    dataLifeTimeSave();
     messageUpdate('Die by overtaken damages.','#F66');
   }
   if (ps.energy <= 0) {
@@ -218,20 +246,20 @@ function limitCheck() {
     player.alive = 0;
     lifetime.dead += 1;
     lifetime.outofenergy += 1;
-    dataAwardsSave();
+    dataLifeTimeSave();
     messageUpdate('Die by out of energy.','#0F0');
   }
   if (ps.dayused >= rules.maxday) {
     player.alive = 0;
     lifetime.dead += 1;
     lifetime.timeup += 1;
-    dataAwardsSave();
+    dataLifeTimeSave();
     messageUpdate('Die by time was up.','#9EF');
   }
   if (items.ur >= rules.wincardneed) {
     player.alive = 0;
     lifetime.won += 1;
-    dataAwardsSave();
+    dataLifeTimeSave();
     messageUpdate('You Won!','white','blue');
   }
   if (!player.alive) {
@@ -245,13 +273,13 @@ function awardsCheck() {
       if (awardinfo.awards[i].condition.operator == '>=') {
         if (this[awardinfo.awards[i].condition.type][awardinfo.awards[i].condition.field] >= awardinfo.awards[i].condition.target) {
           awards[awardinfo.awards[i].name] = 1;
-          dataAwardsSave();
+          dataLifeTimeSave();
           badgeInfo(awardinfo.awards[i].badge.message,awardinfo.awards[i].badge.textcolor,awardinfo.awards[i].badge.bgcolor);
         }
       } else if (awardinfo.awards[i].condition.operator == '<=') {
         if (this[awardinfo.awards[i].condition.type][awardinfo.awards[i].condition.field] <= awardinfo.awards[i].condition.target) {
           awards[awardinfo.awards[i].name] = 1;
-          dataAwardsSave();
+          dataLifeTimeSave();
           badgeInfo(awardinfo.awards[i].badge.message,awardinfo.awards[i].badge.textcolor,awardinfo.awards[i].badge.bgcolor);
         }
       }
@@ -280,10 +308,12 @@ function itemPush(card) {
     case 'SR': items.sr += 1; counter.attack = 0; counter.luck += 1; break;
     case 'UR': items.ur += 1; counter.attack = 0; counter.luck += 1; break;
   }
-  if (counter.attack >= rules.depression) {
+  var depressionLevel = rules.depression + getRandom(0,2);
+  if (counter.attack >= depressionLevel) {
+    var attackDamage = damageRevise();
     counter.attack = 0;
-    ps.damage += rules.damage;
-    lifetime.damage += rules.damage;
+    ps.damage += attackDamage;
+    lifetime.damage += attackDamage;
   }
 }
 /*****  Item Update  *****/
@@ -298,11 +328,11 @@ function dataSave() {
   }
   var enc = btoa(JSON.stringify(playdata));
   createCookie("playerstatus",enc);
-  dataAwardsSave();
+  dataLifeTimeSave();
   messageUpdate('Data was saved.');
 }
 
-function dataAwardsSave() {
+function dataLifeTimeSave() {
   var statisticdata = {
     lifetime: lifetime,
     upgrade: upgrade,

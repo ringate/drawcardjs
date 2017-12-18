@@ -3,7 +3,7 @@ include('validation.php');
 include('random.php');
 $jsonpath = 'json/';
 //$jsonfile = 'percent10.json';
-$jsonfile = 'sum.json';
+$jsonfile = 'sum10.json';
 // if (file_exists($jsonpath . $jsonfile)) {
 //   echo 'yes';
 // } else {
@@ -15,7 +15,7 @@ $jsonfile = 'sum.json';
 // $output = int_filter($drawlevel);
 // echo var_dump($output);
 // exit;
-$drawlevel = 1;
+$drawlevel = 2;
 
 $rawdata = file_get_contents($jsonpath . $jsonfile);
 $json = json_decode($rawdata, true);

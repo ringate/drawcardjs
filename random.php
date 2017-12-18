@@ -11,9 +11,28 @@ function rand_sum($pool, $time = 1, $level = 0) {
   }
   shuffle($box);
   $j = 0;
+  $k = 0;
+  $l = 0;
   for ($i = 0; $i < count($box); $i++) {
     if ($j < $time) {
+      if ( ($level >= 1) && (!$k) && ($box[$i] == 'N') ) {
+        $rand = rand(1, 10);
+        if ($rand == 1) {
+          $k = 1;
+          continue;
+        }
+      }
+      if ( ($level >= 2) && (!$l) && ( ($box[$i] == 'N') || ($box[$i] == 'R') ) ) {
+        $rand = rand(1, 10);
+        if ($rand == 1) {
+          $k = 1;
+          $l = 1;
+          continue;
+        }
+      }
       $result .= $box[$i] . ',';
+      $k = 0;
+      $l = 0;
       $j++;
     } else {
       break;
