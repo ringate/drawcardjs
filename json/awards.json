@@ -143,6 +143,258 @@
         "operator": ">=",
         "target": 100
       }
+    },
+    {
+      "name": "outofenergy1",
+      "desc": {
+        "short": "Dry",
+        "long": "Out of Energy First Times."
+      },
+      "badge": {
+        "message": "What!? Out of energy?",
+        "textcolor": "black",
+        "bgcolor": "palegreen"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "outofenergy",
+        "operator": ">=",
+        "target": 1
+      }
+    },
+    {
+      "name": "outofenergy10",
+      "desc": {
+        "short": "Dry",
+        "long": "Out of Energy 10 Times."
+      },
+      "badge": {
+        "message": "Again and again...",
+        "textcolor": "black",
+        "bgcolor": "lime"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "outofenergy",
+        "operator": ">=",
+        "target": 10
+      }
+    },
+    {
+      "name": "outofenergy50",
+      "desc": {
+        "short": "Dry",
+        "long": "Out of Energy 50 Times."
+      },
+      "badge": {
+        "message": "Super dry...",
+        "textcolor": "black",
+        "bgcolor": "limegreen"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "outofenergy",
+        "operator": ">=",
+        "target": 50
+      }
+    },
+    {
+      "name": "damage100",
+      "desc": {
+        "short": "Damage",
+        "long": "Total Taken 100 Damages."
+      },
+      "badge": {
+        "message": "Arrrrrr~~~~~",
+        "textcolor": "black",
+        "bgcolor": "pink"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "damage",
+        "operator": ">=",
+        "target": 100
+      }
+    },
+    {
+      "name": "damage500",
+      "desc": {
+        "short": "Damage",
+        "long": "Total Taken 500 Damages."
+      },
+      "badge": {
+        "message": "My blood is bleeding.",
+        "textcolor": "black",
+        "bgcolor": "red"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "damage",
+        "operator": ">=",
+        "target": 500
+      }
+    },
+    {
+      "name": "damage1000",
+      "desc": {
+        "short": "Damage",
+        "long": "Total Taken 1,000 Damages."
+      },
+      "badge": {
+        "message": "No more blood.",
+        "textcolor": "white",
+        "bgcolor": "darkred"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "damage",
+        "operator": ">=",
+        "target": 1000
+      }
+    },
+    {
+      "name": "day10",
+      "desc": {
+        "short": "Day",
+        "long": "Total Alived 10 Days."
+      },
+      "badge": {
+        "message": "Ten days ago...",
+        "textcolor": "red",
+        "bgcolor": "black"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "day",
+        "operator": ">=",
+        "target": 10
+      }
+    },
+    {
+      "name": "day50",
+      "desc": {
+        "short": "Day",
+        "long": "Total Alived 50 Days."
+      },
+      "badge": {
+        "message": "Am I still alive?",
+        "textcolor": "yellow",
+        "bgcolor": "black"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "day",
+        "operator": ">=",
+        "target": 50
+      }
+    },
+    {
+      "name": "day100",
+      "desc": {
+        "short": "Day",
+        "long": "Total Alived 100 Days."
+      },
+      "badge": {
+        "message": "I still alive!",
+        "textcolor": "green",
+        "bgcolor": "black"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "day",
+        "operator": ">=",
+        "target": 100
+      }
+    },
+    {
+      "name": "day200",
+      "desc": {
+        "short": "Day",
+        "long": "Total Alived 200 Days."
+      },
+      "badge": {
+        "message": "I love this place.",
+        "textcolor": "blue",
+        "bgcolor": "black"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "day",
+        "operator": ">=",
+        "target": 200
+      }
+    },
+    {
+      "name": "day365",
+      "desc": {
+        "short": "Day",
+        "long": "Total Alived 1 year!"
+      },
+      "badge": {
+        "message": "Home sweet home.",
+        "textcolor": "purple",
+        "bgcolor": "black"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "day",
+        "operator": ">=",
+        "target": 365
+      }
+    },
+    {
+      "name": "won1",
+      "desc": {
+        "short": "Win",
+        "long": "First Times Won!"
+      },
+      "badge": {
+        "message": "Yes! I Won!",
+        "textcolor": "black",
+        "bgcolor": "peru"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "won",
+        "operator": ">=",
+        "target": 1
+      }
+    },
+    {
+      "name": "won3",
+      "desc": {
+        "short": "Win",
+        "long": "Third Times Won!"
+      },
+      "badge": {
+        "message": "Easy to win!",
+        "textcolor": "black",
+        "bgcolor": "sliver"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "won",
+        "operator": ">=",
+        "target": 3
+      }
+    },
+    {
+      "name": "won10",
+      "desc": {
+        "short": "Win",
+        "long": "Ten Times Won!"
+      },
+      "badge": {
+        "message": "Champion!!",
+        "textcolor": "black",
+        "bgcolor": "gold"
+      },
+      "condition": {
+        "type": "lifetime",
+        "field": "won",
+        "operator": ">=",
+        "target": 10
+      }
     }
   ]
 }

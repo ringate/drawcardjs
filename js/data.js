@@ -105,6 +105,23 @@ var upgrade = {
   redrawn: 0,
   redrawnr: 0
 };
+var talent = {
+  athlete: 0,
+  gymgoer: 0,
+  ambulanceman: 0,
+  coach: 0,
+  soldier: 0,
+  landlord: 0,
+  boss: 0,
+  commander: 0,
+  capitalist: 0
+}
+var rolelock = {
+  unlock1: 0,
+  unlock2: 0,
+  unlock3: 0
+}
 var originaldata = {};
 var awardinfo = {};
 var upgradeinfo = {};
+var talentinfo = {};

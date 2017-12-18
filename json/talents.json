@@ -1,0 +1,238 @@
+{
+  "talents": [
+    {
+      "name": "athlete",
+      "desc": {
+        "short": "Athlete",
+        "long": "Better maximum energy."
+      },
+      "color": {
+        "text": "black",
+        "background": "lime"
+      },
+      "addons": [
+        {
+          "type": "rules",
+          "field": "maxenergy",
+          "operator": "+",
+          "target": 20
+        },
+        {
+          "type": "ps",
+          "field": "energy",
+          "operator": "+",
+          "target": 20
+        }
+      ],
+      "require": {
+        "enabled": "talentunlock1"
+      }
+    },
+    {
+      "name": "gymgoer",
+      "desc": {
+        "short": "Gym-goer",
+        "long": "Better maximum durability."
+      },
+      "color": {
+        "text": "black",
+        "background": "orangered"
+      },
+      "addons": [
+        {
+          "type": "rules",
+          "field": "maxdur",
+          "operator": "+",
+          "target": 20
+        }
+      ],
+      "require": {
+        "enabled": "talentunlock1"
+      }
+    },
+    {
+      "name": "ambulanceman",
+      "desc": {
+        "short": "Ambulance Man",
+        "long": "Emergency treatment is ready."
+      },
+      "color": {
+        "text": "white",
+        "background": "silver"
+      },
+      "addons": [
+        {
+          "type": "items",
+          "field": "n",
+          "operator": "+",
+          "target": 30
+        }
+      ],
+      "require": {
+        "enabled": "talentunlock1"
+      }
+    },
+    {
+      "name": "coach",
+      "desc": {
+        "short": "Coach",
+        "long": "Reduce energy lost."
+      },
+      "color": {
+        "text": "black",
+        "background": "limegreen"
+      },
+      "addons": [
+        {
+          "type": "rules",
+          "field": "drawcard",
+          "operator": "-",
+          "target": 1
+        }
+      ],
+      "require": {
+        "enabled": "talentunlock2"
+      }
+    },
+    {
+      "name": "soldier",
+      "desc": {
+        "short": "Soldier",
+        "long": "Damage resistance."
+      },
+      "color": {
+        "text": "black",
+        "background": "orange"
+      },
+      "addons": [
+        {
+          "type": "rules",
+          "field": "damage",
+          "operator": "-",
+          "target": 2
+        }
+      ],
+      "require": {
+        "enabled": "talentunlock2"
+      }
+    },
+    {
+      "name": "landlord",
+      "desc": {
+        "short": "Landlord",
+        "long": "Come with better assets."
+      },
+      "color": {
+        "text": "white",
+        "background": "gray"
+      },
+      "addons": [
+        {
+          "type": "items",
+          "field": "n",
+          "operator": "+",
+          "target": 60
+        },
+        {
+          "type": "items",
+          "field": "r",
+          "operator": "+",
+          "target": 50
+        }
+      ],
+      "require": {
+        "enabled": "talentunlock2"
+      }
+    },
+    {
+      "name": "boss",
+      "desc": {
+        "short": "Boss",
+        "long": "Unusual determination."
+      },
+      "color": {
+        "text": "white",
+        "background": "olive"
+      },
+      "addons": [
+        {
+          "type": "rules",
+          "field": "maxenergy",
+          "operator": "+",
+          "target": 100
+        },
+        {
+          "type": "ps",
+          "field": "energy",
+          "operator": "+",
+          "target": 100
+        },
+        {
+          "type": "rules",
+          "field": "sleeprecover",
+          "operator": "+",
+          "target": 50
+        }
+      ],
+      "require": {
+        "enabled": "talentunlock3"
+      }
+    },
+    {
+      "name": "commander",
+      "desc": {
+        "short": "Commander",
+        "long": "Follow my heart."
+      },
+      "color": {
+        "text": "black",
+        "background": "gold"
+      },
+      "addons": [
+        {
+          "type": "rules",
+          "field": "depression",
+          "operator": "-",
+          "target": 2
+        },
+        {
+          "type": "rules",
+          "field": "wincardneed",
+          "operator": "-",
+          "target": 10
+        }
+      ],
+      "require": {
+        "enabled": "talentunlock3"
+      }
+    },
+    {
+      "name": "capitalist",
+      "desc": {
+        "short": "Capitalist",
+        "long": "Always deal with the challenges."
+      },
+      "color": {
+        "text": "white",
+        "background": "black"
+      },
+      "addons": [
+        {
+          "type": "rules",
+          "field": "healcard1",
+          "operator": "-",
+          "target": 3
+        },
+        {
+          "type": "rules",
+          "field": "healcard2",
+          "operator": "-",
+          "target": 10
+        }
+      ],
+      "require": {
+        "enabled": "talentunlock3"
+      }
+    }
+  ]
+}

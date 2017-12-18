@@ -10,15 +10,15 @@ function statusUpdate() {
   $('#dayused .level').html(ps.dayused);
   $('#dayused .bar').width(ps.dayused+'%');
   $('#energy .level').html(ps.energy);
-  $('#energy .bar').width(ps.energy+'%');
+  $('#energy .bar').width((ps.energy/rules.maxenergy*100)+'%');
   $('#damage .level').html(ps.damage);
-  $('#damage .bar').width(ps.damage+'%');
+  $('#damage .bar').width((ps.damage/rules.maxdur*100)+'%');
 }
 
 function awardsUpdate() {
   for (var i = 0; i < awardinfo.awards.length; i++) {
     if (awards[awardinfo.awards[i].name] && !$('#' + awardinfo.awards[i].name).hasClass('showup')) {
-      $('#' + awardinfo.awards[i].name).addClass('showup');
+      $('#' + awardinfo.awards[i].name).attr('title',awardinfo.awards[i].desc.long).addClass('showup');
     }
   }
 }
@@ -26,7 +26,18 @@ function awardsUpdate() {
 function upgradeUpdate() {
   Object.keys(upgrade).forEach(function(factor) {
     if (upgrade[factor]) {
-      $('#' + factor).css({'background-color': '#DEF'});
+      $('#' + factor).addClass('selected');
+    }
+  });
+}
+
+function talentUpdate() {
+  $('#talent-list').empty();
+  Object.keys(talent).forEach(function(role) {
+    if (talent[role]) {
+      var talentData = findTalent(role)[0];
+      var elem = $('<li></li>').text(talentData.desc.short).attr('id',talentData.name).attr('title',talentData.desc.long).css({'color':talentData.color.text,'background-color':talentData.color.background});
+      $('#talent-list').append(elem);
     }
   });
 }
@@ -86,6 +97,7 @@ function cardDraw(type, hash) {
 
 function worldReset() {
   $('#badge-list li.showup').removeClass('showup');
+  $('#upgrade-list > div.selected').removeClass('selected');
   badgeInfo('');
   lifetime = $.extend(true, {}, originaldata.lifetime);
   upgrade = $.extend(true, {}, originaldata.upgrade);
@@ -153,8 +165,8 @@ function recoverRestore() {
 
 /*****  Upgrade Handler Logic  *****/
 function findUpgrade(factor) {
-    return $.grep(upgradeinfo.upgrades, function(upgrade, i) {
-      return upgrade.name == factor;
+    return $.grep(upgradeinfo.upgrades, function(upgradeobj, i) {
+      return upgradeobj.name == factor;
     });
 }
 
@@ -178,38 +190,85 @@ function worldUpgrade(factor) {
         }
       }
     }
+    var factorUpdated = 0;
     if (requirements.condition.operator == '>=') {
       if (this[requirements.condition.type][requirements.condition.field] >= requirements.condition.target) {
       	this[requirements.condition.type][requirements.condition.field] -= requirements.condition.target;
-        upgrade[requirements.name] = 1;
-        dataSave();
-        dataLifeTimeSave();
-        $('#' + requirements.name).css({'background-color': '#DEF'});
-        messageUpdate(requirements.desc.long,requirements.color.text,requirements.color.background);
-        itemUpdate();
-        return true;
+        factorUpdated = 1;
       } else {
-        messageUpdate('Need ' + requirements.condition.target + ' ' + requirements.condition.field.toUpperCase() + ' Cards.');
+        factorUpdated = -1;
       }
     } else if (requirements.condition.operator == '<=') {
       if (this[requirements.condition.type][requirements.condition.field] <= requirements.condition.target) {
       	this[requirements.condition.type][requirements.condition.field] += requirements.condition.target;
-        upgrade[requirements.name] = 1;
-        dataSave();
-        dataLifeTimeSave();
-        $('#' + requirements.name).css({'background-color': '#DEF'});
-        messageUpdate(requirements.desc.long,requirements.color.text,requirements.color.background);
-        itemUpdate();
-        return true;
+        factorUpdated = 1;
       } else {
-        messageUpdate('Need ' + requirements.condition.target + ' ' + requirements.condition.field.toUpperCase() + ' Cards.');
+        factorUpdated = -1;
       }
+    }
+    if (factorUpdated == 1) {
+      upgrade[requirements.name] = 1;
+      if (requirements.name.indexOf('talentunlock') != -1) randomTalent();
+      dataSave();
+      dataLifeTimeSave();
+      dataLoad();
+      messageUpdate(requirements.desc.long,requirements.color.text,requirements.color.background);
+      return true;
+    } else if (factorUpdated == -1) {
+      messageUpdate('Need ' + requirements.condition.target + ' ' + requirements.condition.field.toUpperCase() + ' Cards.');
     }
   } else {
     return false;
   }
 }
 /*****  Upgrade Handler Logic  *****/
+
+/*****  Talent Role Influence Logic  *****/
+function findTalent(role) {
+  return $.grep(talentinfo.talents, function(talentobj, i) {
+    return talentobj.name == role;
+  });
+}
+
+function findTalentByLevel(unlock) {
+  return $.grep(talentinfo.talents, function(talentobj, i) {
+    return talentobj.require.enabled == unlock;
+  });
+}
+
+function randomTalent() {
+  if ( (upgrade.talentunlock1) && (!rolelock.unlock1) ) {
+    rolelock.unlock1 = 1;
+    let talentlist = findTalentByLevel('talentunlock1');
+    talent[talentlist[getRandom(0,talentlist.length - 1)].name] = 1;
+  }
+  if ( (upgrade.talentunlock2) && (!rolelock.unlock2) ) {
+    rolelock.unlock2 = 1;
+    let talentlist = findTalentByLevel('talentunlock2');
+    talent[talentlist[getRandom(0,talentlist.length - 1)].name] = 1;
+  }
+  if ( (upgrade.talentunlock3) && (!rolelock.unlock3) ) {
+    rolelock.unlock3 = 1;
+    let talentlist = findTalentByLevel('talentunlock3');
+    talent[talentlist[getRandom(0,talentlist.length - 1)].name] = 1;
+  }
+}
+
+function insertTalent() {
+  Object.keys(talent).forEach(function(role) {
+    if (talent[role]) {
+      let talentData = findTalent(role)[0];
+      for (var i = 0; i < talentData.addons.length; i++) {
+        if (talentData.addons[i].operator == '+') {
+          this[talentData.addons[i].type][talentData.addons[i].field] += talentData.addons[i].target;
+        } else if (talentData.addons[i].operator == '-') {
+          this[talentData.addons[i].type][talentData.addons[i].field] -= talentData.addons[i].target;
+        }
+      }
+    }
+  });
+}
+/*****  Talent Role Influence Logic  *****/
 
 /*****  Upgrade Revise Logic  *****/
 function damageRevise() {
@@ -324,7 +383,9 @@ function dataSave() {
   var playdata = {
     player: player,
     items: items,
-    ps: ps
+    ps: ps,
+    talent: talent,
+    rolelock: rolelock
   }
   var enc = btoa(JSON.stringify(playdata));
   createCookie("playerstatus",enc);
@@ -346,9 +407,12 @@ function dataLoad() {
   var enc = readCookie("playerstatus");
   if (enc != null) {
     var dnc = $.parseJSON(atob(enc));
+    rules = $.extend(true, {}, originaldata.rules);
     player = dnc.player;
     items = dnc.items;
     ps = dnc.ps;
+    talent = dnc.talent;
+    rolelock = dnc.rolelock;
     counter = $.extend(true, {}, originaldata.counter);
     var enc2 = readCookie("playerawards");
     if (enc2 != null) {
@@ -357,9 +421,12 @@ function dataLoad() {
       upgrade = dnc2.upgrade;
       awards = dnc2.awards;
       limitCheck();
+      insertTalent();
       itemUpdate();
       statusUpdate();
+      talentUpdate();
       awardsUpdate();
+      upgradeUpdate();
       messageUpdate('Data was loaded.');
     }
   }
@@ -368,9 +435,12 @@ function dataLoad() {
 
 /*****  Start Game Init  *****/
 function initOriginal() {
+  originaldata.rules = $.extend(true, {}, rules);
   originaldata.player = $.extend(true, {}, player);
   originaldata.items = $.extend(true, {}, items);
   originaldata.ps = $.extend(true, {}, ps);
+  originaldata.talent = $.extend(true, {}, talent);
+  originaldata.rolelock = $.extend(true, {}, rolelock);
   originaldata.counter = $.extend(true, {}, counter);
   originaldata.lifetime = $.extend(true, {}, lifetime);
   originaldata.upgrade = $.extend(true, {}, upgrade);
@@ -415,15 +485,30 @@ function initUpgrades(type, hash) {
   });
 }
 
+function initTalent(type, hash) {
+  $.get({
+    url: 'ajax.php',
+    data: { type: type, hash: hash },
+  }).done(function(data) {
+    if (data == 'error') return false;
+    talentinfo = $.parseJSON(data);
+  });
+}
+
 function roundReset() {
   player = $.extend(true, {}, originaldata.player);
   items = $.extend(true, {}, originaldata.items);
   ps = $.extend(true, {}, originaldata.ps);
+  talent = $.extend(true, {}, originaldata.talent);
+  rolelock = $.extend(true, {}, originaldata.rolelock);
   counter = $.extend(true, {}, originaldata.counter);
   $('.mode').show();
   messageUpdate('Welcome!');
+  randomTalent();
+  insertTalent();
   itemUpdate();
   statusUpdate();
+  talentUpdate();
   upgradeUpdate();
   logClear();
 }
@@ -434,6 +519,7 @@ function runOnce() {
   initItems();
   initAwards('custom','95e777b1daaacd8870c480bb35293b53754e5e832896260b863f41e52ac05edf');
   initUpgrades('custom','ee943dc49fcbfff114b8e5772951cddb2f5204a5d5c6379d3f609261c6db34b9');
+  initTalent('custom','aa71c311a2c73de593a95fb2fed2d3e1289deac3bc3f73b56ef7c38e0642a4b0');
   roundReset();
   dataLoad();
 }

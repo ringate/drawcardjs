@@ -15,6 +15,7 @@ if ( (isset($_GET['type'])) && (!empty($_GET['type'])) ) {
       case codegen(10): $poolname .= '10'; break;
       case codegen('awards'): $poolname .= 'awards'; break;
       case codegen('upgrades'): $poolname .= 'upgrades'; break;
+      case codegen('talents'): $poolname .= 'talents'; break;
     }
   }
   if (empty($poolname)) {
