@@ -1,0 +1,5 @@
+@media only screen and (max-width: 768px) {
+  #command-list li, #command-list2 li { margin-right: 0px; padding: 10px 4px; }
+  #item-list li { padding: 5px 15px; }
+  .column { float: none; width: 100%; margin: 0px; padding: 5px; }
+}
