@@ -16,12 +16,6 @@
           "field": "maxenergy",
           "operator": "+",
           "target": 20
-        },
-        {
-          "type": "ps",
-          "field": "energy",
-          "operator": "+",
-          "target": 20
         }
       ],
       "require": {
@@ -158,12 +152,6 @@
         {
           "type": "rules",
           "field": "maxenergy",
-          "operator": "+",
-          "target": 100
-        },
-        {
-          "type": "ps",
-          "field": "energy",
           "operator": "+",
           "target": 100
         },

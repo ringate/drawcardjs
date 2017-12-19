@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-<title>Draw Card v0.4</title>
+<title>Draw Card v0.5</title>
 <script src="js/jquery.min.js"></script>
 <script src="js/cookie.js"></script>
 <script src="js/data.js"></script>
@@ -22,11 +22,11 @@
     <li id="recover" class="mode">Recover</li>
   </ul>
   <ul id="command-list2">
-    <li id="save" class="mode">Save</li>
-    <li id="load">Load</li>
+    <li id="save" class="debug">Save</li>
+    <li id="load" class="debug">Load</li>
     <li id="reset">Restart</li>
-    <li id="hard-reset">Reset</li>
-    <li id="clearlogs">Clear Logs</li>
+    <li id="hard-reset" class="debug">Reset</li>
+    <li id="clearlogs" class="debug">Clear Logs</li>
   </ul>
   <hr />
   <ul id="talent-list">
@@ -76,10 +76,11 @@
       <li><s>[v0.3] Add new variables for affect cards drop rate or others.</s></li>
       <li><s>[v0.3] Add random values for affect depression level, sleep &amp; heal.</s></li>
       <li><s>[v0.4] Add talent system.</s></li>
+      <li><s>[v0.5] Bug fixes.</s></li>
     </ul>
   </div>
   <hr />
-  <div id="log"></div>
+  <div id="log" class="debug"></div>
 </div>
 <div class="clear"></div>
 

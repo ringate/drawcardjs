@@ -7,12 +7,14 @@ function itemUpdate() {
 }
 
 function statusUpdate() {
+  var nMaxEnergy = rules.maxenergy + rules_addon.maxenergy;
+  var nMaxDurability = rules.maxdur + rules_addon.maxdur;
   $('#dayused .level').html(ps.dayused);
   $('#dayused .bar').width(ps.dayused+'%');
   $('#energy .level').html(ps.energy);
-  $('#energy .bar').width((ps.energy/rules.maxenergy*100)+'%');
+  $('#energy .bar').width((ps.energy/nMaxEnergy*100)+'%');
   $('#damage .level').html(ps.damage);
-  $('#damage .bar').width((ps.damage/rules.maxdur*100)+'%');
+  $('#damage .bar').width((ps.damage/nMaxDurability*100)+'%');
 }
 
 function awardsUpdate() {
@@ -87,6 +89,7 @@ function cardDraw(type, hash) {
     }
     energyUse(card);
     itemAdd(card);
+    dataSave('mute');
     limitCheck();
     awardsCheck();
     itemUpdate();
@@ -122,43 +125,51 @@ function sleepRestore() {
   ps.dayused += 1;
   lifetime.day += 1;
   if (!awards.sleepaweek) {
-    if (ps.energy == rules.maxenergy) {
+    var nMaxEnergy = rules.maxenergy + rules_addon.maxenergy;
+    if (ps.energy == nMaxEnergy) {
       counter.sleep += 1;
     } else {
       counter.sleep = 1;
     }
     awardsCheck();
   }
-  ps.energy += rules.sleeprecover + getRandom(-10,10);
+  var nSleepRecover = rules.sleeprecover + rules_addon.sleeprecover;
+  ps.energy += nSleepRecover + getRandom(-10,10);
   messageUpdate('Restored some energy.');
   limitCheck();
   statusUpdate();
+  dataSave('mute');
 }
 
 function healRestore() {
-  if (items.n >= rules.healcard1) {
-    items.n -= rules.healcard1;
-    var healValue = rules.heal1 + getRandom(0,5);
-    ps.damage -= healValue;
+  var nHealCard1 = healNCardRevise();
+  if (items.n >= nHealCard1) {
+    items.n -= nHealCard1;
+    var nHealPoint1 = rules.heal1 + rules_addon.heal1 + getRandom(0,5);
+    ps.damage -= nHealPoint1;
     limitCheck();
     itemUpdate();
     statusUpdate();
-    messageUpdate('Reduced ' + healValue + ' damages.','green');
+    dataSave('mute');
+    messageUpdate('Reduced ' + nHealPoint1 + ' damages.','green');
   } else {
-    messageUpdate('At least ' + rules.healcard1 + ' N card for heal.');
+    messageUpdate('At least ' + nHealCard1 + ' N card for heal.');
   }
 }
 
 function recoverRestore() {
-  if (items.r >= rules.healcard2) {
-    items.r -= rules.healcard2;
-    ps.damage -= rules.heal2;
+  var nHealCard2 = rules.healcard2 + rules_addon.healcard2;
+  if (items.r >= nHealCard2) {
+    items.r -= nHealCard2;
+    var nHealPoint2 = rules.heal2 + rules_addon.heal2 + getRandom(-10,10);
+    ps.damage -= nHealPoint2;
     limitCheck();
     itemUpdate();
     statusUpdate();
-    messageUpdate('Reduced ' + rules.heal2 + ' damages.','purple');
+    dataSave('mute');
+    messageUpdate('Reduced ' + nHealPoint2 + ' damages.','purple');
   } else {
-    messageUpdate('At least ' + rules.healcard2 + ' R card for recover.');
+    messageUpdate('At least ' + nHealCard2 + ' R card for recover.');
   }
 }
 /*****  Energy Using Logic  *****/
@@ -209,7 +220,7 @@ function worldUpgrade(factor) {
     if (factorUpdated == 1) {
       upgrade[requirements.name] = 1;
       if (requirements.name.indexOf('talentunlock') != -1) randomTalent();
-      dataSave();
+      dataSave('mute');
       dataLifeTimeSave();
       dataLoad();
       messageUpdate(requirements.desc.long,requirements.color.text,requirements.color.background);
@@ -260,9 +271,17 @@ function insertTalent() {
       let talentData = findTalent(role)[0];
       for (var i = 0; i < talentData.addons.length; i++) {
         if (talentData.addons[i].operator == '+') {
-          this[talentData.addons[i].type][talentData.addons[i].field] += talentData.addons[i].target;
+          if (talentData.addons[i].type == 'rules') {
+            rules_addon[talentData.addons[i].field] = talentData.addons[i].target;
+          } else {
+            this[talentData.addons[i].type][talentData.addons[i].field] += talentData.addons[i].target;
+          }
         } else if (talentData.addons[i].operator == '-') {
-          this[talentData.addons[i].type][talentData.addons[i].field] -= talentData.addons[i].target;
+          if (talentData.addons[i].type == 'rules') {
+            rules_addon[talentData.addons[i].field] = talentData.addons[i].target * -1;
+          } else {
+            this[talentData.addons[i].type][talentData.addons[i].field] -= talentData.addons[i].target;
+          }
         }
       }
     }
@@ -272,7 +291,7 @@ function insertTalent() {
 
 /*****  Upgrade Revise Logic  *****/
 function damageRevise() {
-  var nDamage = rules.damage;
+  var nDamage = rules.damage + rules_addon.damage;
   if (upgrade.reducedamage1) nDamage -= DAMAGE_LV_UP1;
   if (upgrade.reducedamage2) nDamage -= DAMAGE_LV_UP2;
   if (upgrade.reducedamage3) nDamage -= DAMAGE_LV_UP3;
@@ -280,21 +299,33 @@ function damageRevise() {
 }
 
 function energyRevise() {
-  var nEnergy = rules.drawcard;
+  var nEnergy = rules.drawcard + rules_addon.drawcard;
   if (upgrade.reduceenergy1) nEnergy -= ENERGY_LV_UP1;
   if (upgrade.reduceenergy2) nEnergy -= ENERGY_LV_UP2;
   if (upgrade.reduceenergy3) nEnergy -= ENERGY_LV_UP3;
   return nEnergy;
 }
+
+function healNCardRevise() {
+  var nHealCard1 = rules.healcard1 + rules_addon.healcard1;
+  if (upgrade.reducehealncard1) nHealCard1 -= FIRST_AID_LV_UP1;
+  if (upgrade.reducehealncard2) nHealCard1 -= FIRST_AID_LV_UP2;
+  return nHealCard1;
+}
 /*****  Upgrade Revise Logic  *****/
 
 /*****  Data Logic Checking  *****/
 function limitCheck() {
-  if (ps.energy > rules.maxenergy) ps.energy = rules.maxenergy;
+  var nMaxEnergy = rules.maxenergy + rules_addon.maxenergy;
+  var nMaxDurability = rules.maxdur + rules_addon.maxdur;
+  var nMaxDay = rules.maxday + rules_addon.maxday;
+  var nWinCardNeed = rules.wincardneed + rules_addon.wincardneed;
+
+  if (ps.energy > nMaxEnergy) ps.energy = nMaxEnergy;
   if (ps.damage < 0) ps.damage = 0;
 
-  if (ps.damage >= rules.maxdur) {
-    ps.damage = rules.maxdur;
+  if (ps.damage >= nMaxDurability) {
+    ps.damage = nMaxDurability;
     player.alive = 0;
     lifetime.dead += 1;
     dataLifeTimeSave();
@@ -308,14 +339,14 @@ function limitCheck() {
     dataLifeTimeSave();
     messageUpdate('Die by out of energy.','#0F0');
   }
-  if (ps.dayused >= rules.maxday) {
+  if (ps.dayused >= nMaxDay) {
     player.alive = 0;
     lifetime.dead += 1;
     lifetime.timeup += 1;
     dataLifeTimeSave();
     messageUpdate('Die by time was up.','#9EF');
   }
-  if (items.ur >= rules.wincardneed) {
+  if (items.ur >= nWinCardNeed) {
     player.alive = 0;
     lifetime.won += 1;
     dataLifeTimeSave();
@@ -367,8 +398,8 @@ function itemPush(card) {
     case 'SR': items.sr += 1; counter.attack = 0; counter.luck += 1; break;
     case 'UR': items.ur += 1; counter.attack = 0; counter.luck += 1; break;
   }
-  var depressionLevel = rules.depression + getRandom(0,2);
-  if (counter.attack >= depressionLevel) {
+  var nDepressionLevel = rules.depression + rules_addon.depression + getRandom(0,2);
+  if (counter.attack >= nDepressionLevel) {
     var attackDamage = damageRevise();
     counter.attack = 0;
     ps.damage += attackDamage;
@@ -379,7 +410,7 @@ function itemPush(card) {
 /*****  Game Logic  *****/
 
 /*****  Data Save/Load Handling  *****/
-function dataSave() {
+function dataSave(options) {
   var playdata = {
     player: player,
     items: items,
@@ -390,7 +421,9 @@ function dataSave() {
   var enc = btoa(JSON.stringify(playdata));
   createCookie("playerstatus",enc);
   dataLifeTimeSave();
-  messageUpdate('Data was saved.');
+  // if (options != 'mute') {
+  //   messageUpdate('Data was saved.');
+  // }
 }
 
 function dataLifeTimeSave() {
@@ -408,6 +441,7 @@ function dataLoad() {
   if (enc != null) {
     var dnc = $.parseJSON(atob(enc));
     rules = $.extend(true, {}, originaldata.rules);
+    rules_addon = $.extend(true, {}, originaldata.rules_addon);
     player = dnc.player;
     items = dnc.items;
     ps = dnc.ps;
@@ -427,7 +461,7 @@ function dataLoad() {
       talentUpdate();
       awardsUpdate();
       upgradeUpdate();
-      messageUpdate('Data was loaded.');
+      // messageUpdate('Data was loaded.');
     }
   }
 }
@@ -436,6 +470,7 @@ function dataLoad() {
 /*****  Start Game Init  *****/
 function initOriginal() {
   originaldata.rules = $.extend(true, {}, rules);
+  originaldata.rules_addon = $.extend(true, {}, rules_addon);
   originaldata.player = $.extend(true, {}, player);
   originaldata.items = $.extend(true, {}, items);
   originaldata.ps = $.extend(true, {}, ps);
@@ -496,6 +531,7 @@ function initTalent(type, hash) {
 }
 
 function roundReset() {
+  rules_addon = $.extend(true, {}, originaldata.rules_addon);
   player = $.extend(true, {}, originaldata.player);
   items = $.extend(true, {}, originaldata.items);
   ps = $.extend(true, {}, originaldata.ps);
@@ -511,6 +547,7 @@ function roundReset() {
   talentUpdate();
   upgradeUpdate();
   logClear();
+  dataSave('mute');
 }
 
 function runOnce() {

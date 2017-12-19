@@ -25,3 +25,8 @@ body { font-family: Sans, sans-serif; -webkit-font-smoothing: antialiased; paddi
 #lastmsg, #badge-info { border: 1px solid #666; padding: 3px; }
 .column { float: left; width: 40%; box-sizing: border-box; border: 1px solid #000; margin: 10px; padding: 10px; }
 .clear { clear: both; }
+
+/*
+For Production
+*/
+.debug { display: none !important; }

@@ -1,6 +1,43 @@
 {
   "upgrades": [
     {
+      "name": "reducehealncard1",
+      "desc": {
+        "short": "LV1",
+        "long": "First Aid I - Reduce N Cards"
+      },
+      "color": {
+        "text": "red",
+        "background": "white"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 5
+      }
+    },
+    {
+      "name": "reducehealncard2",
+      "desc": {
+        "short": "LV2",
+        "long": "First Aid II - Reduce N Cards"
+      },
+      "color": {
+        "text": "red",
+        "background": "lime"
+      },
+      "condition": {
+        "type": "items",
+        "field": "sr",
+        "operator": ">=",
+        "target": 40
+      },
+      "require": {
+        "enabled": "reducehealncard1"
+      }
+    },
+    {
       "name": "reducedamage1",
       "desc": {
         "short": "LV1",
@@ -185,7 +222,7 @@
         "type": "items",
         "field": "sr",
         "operator": ">=",
-        "target": 50
+        "target": 35
       }
     },
     {
@@ -202,7 +239,7 @@
         "type": "items",
         "field": "sr",
         "operator": ">=",
-        "target": 100
+        "target": 60
       },
       "require": {
         "enabled": "redrawn"

@@ -17,6 +17,8 @@ let DAMAGE_LV_UP3 = 3;
 let ENERGY_LV_UP1 = 1;
 let ENERGY_LV_UP2 = 1;
 let ENERGY_LV_UP3 = 1;
+let FIRST_AID_LV_UP1 = 2;
+let FIRST_AID_LV_UP2 = 2;
 
 var c = 1;
 var rules = {
@@ -32,6 +34,20 @@ var rules = {
   heal1: HEAL_LEVEL1,
   heal2: HEAL_LEVEL2,
   wincardneed: WIN_CARDNEED
+};
+var rules_addon = {
+  damage: 0,
+  drawcard: 0,
+  sleeprecover: 0,
+  depression: 0,
+  maxday: 0,
+  maxenergy: 0,
+  maxdur: 0,
+  healcard1: 0,
+  healcard2: 0,
+  heal1: 0,
+  heal2: 0,
+  wincardneed: 0
 };
 var player = {
   alive: 1
@@ -93,6 +109,8 @@ var awards = {
   impossibleluck: 0
 };
 var upgrade = {
+  reducehealncard1: 0,
+  reducehealncard2: 0,
   reducedamage1: 0,
   reducedamage2: 0,
   reducedamage3: 0,
@@ -115,12 +133,12 @@ var talent = {
   boss: 0,
   commander: 0,
   capitalist: 0
-}
+};
 var rolelock = {
   unlock1: 0,
   unlock2: 0,
   unlock3: 0
-}
+};
 var originaldata = {};
 var awardinfo = {};
 var upgradeinfo = {};
