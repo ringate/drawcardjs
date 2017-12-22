@@ -19,8 +19,8 @@ function statusUpdate() {
 
 function awardsUpdate() {
   for (var i = 0; i < awardinfo.awards.length; i++) {
-    if (awards[awardinfo.awards[i].name] && !$('#' + awardinfo.awards[i].name).hasClass('showup')) {
-      $('#' + awardinfo.awards[i].name).attr('title',awardinfo.awards[i].desc.long).addClass('showup');
+    if (awards[awardinfo.awards[i].name] && $('#' + awardinfo.awards[i].name).hasClass('inactive')) {
+      $('#' + awardinfo.awards[i].name).attr('title',awardinfo.awards[i].desc.long).removeClass('inactive');
     }
   }
 }
@@ -28,7 +28,7 @@ function awardsUpdate() {
 function upgradeUpdate() {
   Object.keys(upgrade).forEach(function(factor) {
     if (upgrade[factor]) {
-      $('#' + factor).addClass('selected');
+      $('#' + factor).removeClass('inactive').addClass('selected');
     }
   });
 }
@@ -91,6 +91,7 @@ function cardDraw(type, hash) {
     itemAdd(card);
     dataSave('mute');
     limitCheck();
+    upgradeCheck();
     awardsCheck();
     itemUpdate();
     statusUpdate();
@@ -99,7 +100,8 @@ function cardDraw(type, hash) {
 }
 
 function worldReset() {
-  $('#badge-list li.showup').removeClass('showup');
+  $('#badge-list li').addClass('inactive');
+  $('#upgrade-list .button').addClass('inactive');
   $('#upgrade-list > div.selected').removeClass('selected');
   badgeInfo('');
   lifetime = $.extend(true, {}, originaldata.lifetime);
@@ -220,6 +222,7 @@ function worldUpgrade(factor) {
     if (factorUpdated == 1) {
       upgrade[requirements.name] = 1;
       if (requirements.name.indexOf('talentunlock') != -1) randomTalent();
+      upgradeCheck();
       dataSave('mute');
       dataLifeTimeSave();
       dataLoad();
@@ -377,6 +380,26 @@ function awardsCheck() {
   }
   awardsUpdate();
 }
+
+function upgradeCheck() {
+  for (var i = 0; i < upgradeinfo.upgrades.length; i++) {
+    if (!upgrade[upgradeinfo.upgrades[i].name]) {
+      if (upgradeinfo.upgrades[i].condition.operator == '>=') {
+        if (this[upgradeinfo.upgrades[i].condition.type][upgradeinfo.upgrades[i].condition.field] >= upgradeinfo.upgrades[i].condition.target) {
+          $('#' + upgradeinfo.upgrades[i].name + ' .button.inactive').removeClass('inactive');
+        } else {
+          $('#' + upgradeinfo.upgrades[i].name + ' .button').addClass('inactive');
+        }
+      } else if (upgradeinfo.upgrades[i].condition.operator == '<=') {
+        if (this[upgradeinfo.upgrades[i].condition.type][upgradeinfo.upgrades[i].condition.field] <= upgradeinfo.upgrades[i].condition.target) {
+          $('#' + upgradeinfo.upgrades[i].name + ' .button.inactive').removeClass('inactive');
+        } else {
+          $('#' + upgradeinfo.upgrades[i].name + ' .button').addClass('inactive');
+        }
+      }
+    }
+  }
+}
 /*****  Data Logic Checking  *****/
 
 /*****  Item Update  *****/
@@ -497,7 +520,7 @@ function initAwards(type, hash) {
     if (data == 'error') return false;
     awardinfo = $.parseJSON(data);
     for (var i = 0; i < awardinfo.awards.length; i++) {
-      var elem = $('<li></li>').text(awardinfo.awards[i].desc.short).attr('id',awardinfo.awards[i].name).css({'color':awardinfo.awards[i].badge.textcolor,'background-color':awardinfo.awards[i].badge.bgcolor});
+      var elem = $('<li></li>').text(awardinfo.awards[i].desc.short).attr('id',awardinfo.awards[i].name).css({'color':awardinfo.awards[i].badge.textcolor,'background-color':awardinfo.awards[i].badge.bgcolor}).addClass('inactive');
       $('#badge-list').append(elem);
     }
   });
@@ -513,7 +536,7 @@ function initUpgrades(type, hash) {
     for (var i = 0; i < upgradeinfo.upgrades.length; i++) {
       var elem = $('<div></div>').attr('id',upgradeinfo.upgrades[i].name);
       $('#upgrade-list').append(elem);
-      $('<div class="button">' + upgradeinfo.upgrades[i].desc.short + '</div>').css({'color':upgradeinfo.upgrades[i].color.text,'background-color':upgradeinfo.upgrades[i].color.background}).appendTo('#' + upgradeinfo.upgrades[i].name);
+      $('<div class="button">' + upgradeinfo.upgrades[i].desc.short + '</div>').css({'color':upgradeinfo.upgrades[i].color.text,'background-color':upgradeinfo.upgrades[i].color.background}).addClass('inactive').appendTo('#' + upgradeinfo.upgrades[i].name);
       $('<div class="desc">' + upgradeinfo.upgrades[i].desc.long + '</div>').appendTo('#' + upgradeinfo.upgrades[i].name);
       $('#' + upgradeinfo.upgrades[i].name).append('<div class="clear"></div>');
     }
@@ -545,6 +568,7 @@ function roundReset() {
   itemUpdate();
   statusUpdate();
   talentUpdate();
+  upgradeCheck();
   upgradeUpdate();
   logClear();
   dataSave('mute');

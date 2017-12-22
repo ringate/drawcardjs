@@ -1,3 +1,6 @@
+let DEBUG_MODE = 0;
+let ROBOT_MODE = 0;
+
 let DAMAGE = 15;
 let DRAWCARD = 6;
 let SLEEP_RECOVER = 75;
