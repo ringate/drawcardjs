@@ -136,7 +136,7 @@ function sleepRestore() {
     awardsCheck();
   }
   var nSleepRecover = rules.sleeprecover + rules_addon.sleeprecover;
-  ps.energy += nSleepRecover + getRandom(-10,10);
+  ps.energy += nSleepRecover + getRandom(rules_random.sleeprecover_min,rules_random.sleeprecover_max);
   messageUpdate('Restored some energy.');
   limitCheck();
   statusUpdate();
@@ -147,7 +147,7 @@ function healRestore() {
   var nHealCard1 = healNCardRevise();
   if (items.n >= nHealCard1) {
     items.n -= nHealCard1;
-    var nHealPoint1 = rules.heal1 + rules_addon.heal1 + getRandom(0,5);
+    var nHealPoint1 = rules.heal1 + rules_addon.heal1 + getRandom(rules_random.heal1_min,rules_random.heal1_max);
     ps.damage -= nHealPoint1;
     limitCheck();
     itemUpdate();
@@ -163,7 +163,7 @@ function recoverRestore() {
   var nHealCard2 = rules.healcard2 + rules_addon.healcard2;
   if (items.r >= nHealCard2) {
     items.r -= nHealCard2;
-    var nHealPoint2 = rules.heal2 + rules_addon.heal2 + getRandom(-10,10);
+    var nHealPoint2 = rules.heal2 + rules_addon.heal2 + getRandom(rules_random.heal2_min,rules_random.heal2_max);
     ps.damage -= nHealPoint2;
     limitCheck();
     itemUpdate();
@@ -421,7 +421,7 @@ function itemPush(card) {
     case 'SR': items.sr += 1; counter.attack = 0; counter.luck += 1; break;
     case 'UR': items.ur += 1; counter.attack = 0; counter.luck += 1; break;
   }
-  var nDepressionLevel = rules.depression + rules_addon.depression + getRandom(0,2);
+  var nDepressionLevel = rules.depression + rules_addon.depression + getRandom(rules_random.depression_min,rules_random.depression_max);
   if (counter.attack >= nDepressionLevel) {
     var attackDamage = damageRevise();
     counter.attack = 0;
@@ -583,5 +583,8 @@ function runOnce() {
   initTalent('custom','aa71c311a2c73de593a95fb2fed2d3e1289deac3bc3f73b56ef7c38e0642a4b0');
   roundReset();
   dataLoad();
+  if (DEBUG_MODE) {
+    $('.debug').attr('style', 'display: inline-block !important');
+  }
 }
 /*****  Start Game Init  *****/

@@ -5,6 +5,7 @@
 body { font-family: Sans, sans-serif; -webkit-font-smoothing: antialiased; padding: 0px; margin: 0px; }
 #command-list, #command-list2, #item-list, #badge-list, #talent-list { list-style-type: none; margin: 5px 0px; padding: 0px; border: 1px solid #666; }
 #command-list li, #command-list2 li, #item-list li, #badge-list li, #talent-list li { display: inline-block; font-size: 15px; text-align: center; margin: 3px; padding: 3px 10px; border: 1px solid #666; cursor: pointer; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none; }
+#command-list2 .selected { background-color: #333; color: #FFF; }
 #badge-list { margin: 0px; padding: 0px; }
 #badge-list li.inactive { background-color: #EEE !important; color: #AAA !important; }
 #status-list, #todo-list, #upgrade-list, #upgrade-list > div { border: 1px solid #666; }
@@ -30,3 +31,8 @@ body { font-family: Sans, sans-serif; -webkit-font-smoothing: antialiased; paddi
 For Production
 */
 .debug { display: none !important; }
+
+/*
+For Debug
+*/
+#debug-history .cols { float: left; width: 14%; }

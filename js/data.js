@@ -1,5 +1,6 @@
 let DEBUG_MODE = 0;
-let ROBOT_MODE = 0;
+let ROBOT_MODE = 1;
+let ROBOT_STATUS = 0;
 
 let DAMAGE = 15;
 let DRAWCARD = 6;
@@ -52,6 +53,16 @@ var rules_addon = {
   heal2: 0,
   wincardneed: 0
 };
+var rules_random = {
+  sleeprecover_min: -10,
+  sleeprecover_max: 10,
+  depression_min: 0,
+  depression_max: 2,
+  heal1_min: 0,
+  heal1_max: 5,
+  heal2_min: -10,
+  heal2_max: 10
+}
 var player = {
   alive: 1
 };
