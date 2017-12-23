@@ -8,7 +8,9 @@ body { font-family: Sans, sans-serif; -webkit-font-smoothing: antialiased; paddi
 #command-list2 .selected { background-color: #333; color: #FFF; }
 #badge-list { margin: 0px; padding: 0px; }
 #badge-list li.inactive { background-color: #EEE !important; color: #AAA !important; }
-#status-list, #todo-list, #upgrade-list, #upgrade-list > div { border: 1px solid #666; }
+#status-list, #history-list, #upgrade-list, #upgrade-list > div { border: 1px solid #666; }
+#history-list > div { margin-top: 3px; margin-left: 10px; }
+#history-list ul { margin-top: 0px; }
 .status-title { float: left; width: 100px; text-align: center; margin: 3px; }
 #dayused, #energy, #damage { float: left; width: 100px; border: 1px solid #666; position: relative; margin: 3px; }
 #dayused:after, #energy:after, #damage:after { content: "."; visibility: hidden; }
