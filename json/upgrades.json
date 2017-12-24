@@ -212,7 +212,7 @@
       "name": "redrawn",
       "desc": {
         "short": "N",
-        "long": "Small chance to redraw if got N card"
+        "long": "Small chance of redraw if got N card"
       },
       "color": {
         "text": "white",
@@ -229,7 +229,7 @@
       "name": "redrawnr",
       "desc": {
         "short": "R",
-        "long": "Small chance to redraw if got N/R card"
+        "long": "Small chance of redraw if got N/R card"
       },
       "color": {
         "text": "white",

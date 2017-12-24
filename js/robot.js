@@ -8,7 +8,7 @@ var debug_counter = 0;
 $(document).ready(function() {
   if (ROBOT_MODE) {
     $('#command-list2').append('<li id="robot">Robot</li><li id="robot-on">On</li><li id="robot-off" class="selected">Off</li>');
-    $('body').append('<div class="column"><div id="debug-history"><div id="last-dayused" class="cols">Days</div><div id="last-energy" class="cols">Energy</div><div id="last-damage" class="cols">Damage</div><div id="last-items-n" class="cols">N</div><div id="last-items-r" class="cols">R</div><div id="last-items-sr" class="cols">SR</div><div id="last-items-ur" class="cols">UR</div><div class="clear"></div></div></div>');
+    $('body').append('<div class="column"><div id="debug-history"><div id="last-dayused" class="cols">Days</div><div id="last-energy" class="cols">Energy</div><div id="last-damage" class="cols">Damage</div><div id="last-items-n" class="cols">N</div><div id="last-items-r" class="cols">R</div><div id="last-items-sr" class="cols">SR</div><div id="last-items-ur" class="cols">UR</div><div class="clear"></div></div></div><div class="clear"></div>');
   }
 }());
 
