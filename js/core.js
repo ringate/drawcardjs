@@ -1,24 +1,24 @@
 /*****  Frontend Update  *****/
 /*****  Frontend Game Data Update  *****/
 function itemUpdate() {
-  for (var label in items) {
+  for (let label in items) {
     $('#card' + label + ' span').html(items[label]);
   }
 }
 
 function statusUpdate() {
-  var nMaxEnergy = rules.maxenergy + rules_addon.maxenergy;
-  var nMaxDurability = rules.maxdur + rules_addon.maxdur;
+  let nMaxEnergy = rules.maxenergy + rules_addon.maxenergy;
+  let nMaxDurability = rules.maxdur + rules_addon.maxdur;
   $('#dayused .level').html(ps.dayused);
-  $('#dayused .bar').width(ps.dayused+'%');
+  $('#dayused .bar').width(ps.dayused + '%');
   $('#energy .level').html(ps.energy);
-  $('#energy .bar').width((ps.energy/nMaxEnergy*100)+'%');
+  $('#energy .bar').width((ps.energy / nMaxEnergy * 100) + '%');
   $('#damage .level').html(ps.damage);
-  $('#damage .bar').width((ps.damage/nMaxDurability*100)+'%');
+  $('#damage .bar').width((ps.damage / nMaxDurability * 100) + '%');
 }
 
 function awardsUpdate() {
-  for (var i = 0; i < awardinfo.awards.length; i++) {
+  for (let i = 0; i < awardinfo.awards.length; i++) {
     if (awards[awardinfo.awards[i].name] && $('#' + awardinfo.awards[i].name).hasClass('inactive')) {
       $('#' + awardinfo.awards[i].name).attr('title',awardinfo.awards[i].desc.long).removeClass('inactive');
     }
@@ -37,8 +37,8 @@ function talentUpdate() {
   $('#talent-list').empty();
   Object.keys(talent).forEach(function(role) {
     if (talent[role]) {
-      var talentData = findTalent(role)[0];
-      var elem = $('<li></li>').text(talentData.desc.short).attr('id',talentData.name).attr('title',talentData.desc.long).css({'color':talentData.color.text,'background-color':talentData.color.background});
+      let talentData = findTalent(role)[0];
+      let elem = $('<li></li>').text(talentData.desc.short).attr('id',talentData.name).attr('title',talentData.desc.long).css({'color':talentData.color.text,'background-color':talentData.color.background});
       $('#talent-list').append(elem);
     }
   });
@@ -71,7 +71,7 @@ function cardDraw(hash) {
   if (typeof drawrule.pool == 'object') {
     card = rand_sum(drawrule.pool, drawrule.time);
     if (card.indexOf(',') != -1) {
-      var cards = card.split(',');
+      let cards = card.split(',');
       lifetime.draw += cards.length;
       messageUpdate('10 Draw! ' + card + ' Cards.');
     } else {
@@ -173,7 +173,7 @@ function rand_percent(pool, time = 1) {
 
 /*****  Core Game Functions  *****/
 function getJSONData(hash) {
-  var jsonobj = null;
+  let jsonobj = null;
   switch (hash) {
     case codeGen(1): jsonfile = 'sum'; break;
     case codeGen(10): jsonfile = 'sum10'; break;
@@ -204,7 +204,7 @@ function worldReset() {
 
 /*****  Energy Using Logic  *****/
 function energyUse(card) {
-  var drawEnergy = energyRevise();
+  let drawEnergy = energyRevise();
   if (card.indexOf(',') != -1) {
     var cards = card.split(',');
     ps.energy -= cards.length * drawEnergy;
@@ -217,7 +217,7 @@ function sleepRestore() {
   ps.dayused += 1;
   lifetime.day += 1;
   if (!awards.sleepaweek) {
-    var nMaxEnergy = rules.maxenergy + rules_addon.maxenergy;
+    let nMaxEnergy = rules.maxenergy + rules_addon.maxenergy;
     if (ps.energy == nMaxEnergy) {
       counter.sleep += 1;
     } else {
@@ -225,7 +225,7 @@ function sleepRestore() {
     }
     awardsCheck();
   }
-  var nSleepRecover = rules.sleeprecover + rules_addon.sleeprecover;
+  let nSleepRecover = rules.sleeprecover + rules_addon.sleeprecover;
   ps.energy += nSleepRecover + getRandom(rules_random.sleeprecover_min,rules_random.sleeprecover_max);
   messageUpdate('Restored some energy.');
   limitCheck();
@@ -234,10 +234,10 @@ function sleepRestore() {
 }
 
 function healRestore() {
-  var nHealCard1 = healNCardRevise();
+  let nHealCard1 = healNCardRevise();
   if (items.n >= nHealCard1) {
     items.n -= nHealCard1;
-    var nHealPoint1 = rules.heal1 + rules_addon.heal1 + getRandom(rules_random.heal1_min,rules_random.heal1_max);
+    let nHealPoint1 = rules.heal1 + rules_addon.heal1 + getRandom(rules_random.heal1_min,rules_random.heal1_max);
     ps.damage -= nHealPoint1;
     limitCheck();
     itemUpdate();
@@ -250,10 +250,10 @@ function healRestore() {
 }
 
 function recoverRestore() {
-  var nHealCard2 = rules.healcard2 + rules_addon.healcard2;
+  let nHealCard2 = rules.healcard2 + rules_addon.healcard2;
   if (items.r >= nHealCard2) {
     items.r -= nHealCard2;
-    var nHealPoint2 = rules.heal2 + rules_addon.heal2 + getRandom(rules_random.heal2_min,rules_random.heal2_max);
+    let nHealPoint2 = rules.heal2 + rules_addon.heal2 + getRandom(rules_random.heal2_min,rules_random.heal2_max);
     ps.damage -= nHealPoint2;
     limitCheck();
     itemUpdate();
@@ -268,24 +268,24 @@ function recoverRestore() {
 
 /*****  Upgrade Handler Logic  *****/
 function findUpgrade(factor) {
-    return $.grep(upgradeinfo.upgrades, function(upgradeobj, i) {
-      return upgradeobj.name == factor;
-    });
+  return $.grep(upgradeinfo.upgrades, function(upgradeobj, i) {
+    return upgradeobj.name == factor;
+  });
 }
 
 function worldUpgrade(factor) {
   if (!upgrade[factor]) {
-    var requirements = findUpgrade(factor)[0];
+    let requirements = findUpgrade(factor)[0];
     if (typeof requirements.require == 'object') {
-      var enabled = requirements.require.enabled;
+      let enabled = requirements.require.enabled;
       if (enabled.indexOf(',') == -1) {
         if (!upgrade[enabled]) {
           messageUpdate('Need upgrade first: ' + requirements.desc.long);
           return false;
         }
       } else {
-        var enabledlist = enabled.split(',');
-        for (var i = 0; i < enabledlist.length; i++) {
+        let enabledlist = enabled.split(',');
+        for (let i = 0; i < enabledlist.length; i++) {
           if (!upgrade[enabledlist[i]]) {
             messageUpdate('Need upgrade first: ' + findUpgrade(enabledlist[i])[0].desc.long);
             return false;
@@ -293,7 +293,7 @@ function worldUpgrade(factor) {
         }
       }
     }
-    var factorUpdated = 0;
+    let factorUpdated = 0;
     if (requirements.condition.operator == '>=') {
       if (this[requirements.condition.type][requirements.condition.field] >= requirements.condition.target) {
       	this[requirements.condition.type][requirements.condition.field] -= requirements.condition.target;
@@ -362,7 +362,7 @@ function insertTalent() {
   Object.keys(talent).forEach(function(role) {
     if (talent[role]) {
       let talentData = findTalent(role)[0];
-      for (var i = 0; i < talentData.addons.length; i++) {
+      for (let i = 0; i < talentData.addons.length; i++) {
         if (talentData.addons[i].operator == '+') {
           if (talentData.addons[i].type == 'rules') {
             rules_addon[talentData.addons[i].field] = talentData.addons[i].target;
@@ -384,7 +384,7 @@ function insertTalent() {
 
 /*****  Upgrade Revise Logic  *****/
 function damageRevise() {
-  var nDamage = rules.damage + rules_addon.damage;
+  let nDamage = rules.damage + rules_addon.damage;
   if (upgrade.reducedamage1) nDamage -= DAMAGE_LV_UP1;
   if (upgrade.reducedamage2) nDamage -= DAMAGE_LV_UP2;
   if (upgrade.reducedamage3) nDamage -= DAMAGE_LV_UP3;
@@ -392,7 +392,7 @@ function damageRevise() {
 }
 
 function energyRevise() {
-  var nEnergy = rules.drawcard + rules_addon.drawcard;
+  let nEnergy = rules.drawcard + rules_addon.drawcard;
   if (upgrade.reduceenergy1) nEnergy -= ENERGY_LV_UP1;
   if (upgrade.reduceenergy2) nEnergy -= ENERGY_LV_UP2;
   if (upgrade.reduceenergy3) nEnergy -= ENERGY_LV_UP3;
@@ -400,7 +400,7 @@ function energyRevise() {
 }
 
 function healNCardRevise() {
-  var nHealCard1 = rules.healcard1 + rules_addon.healcard1;
+  let nHealCard1 = rules.healcard1 + rules_addon.healcard1;
   if (upgrade.reducehealncard1) nHealCard1 -= FIRST_AID_LV_UP1;
   if (upgrade.reducehealncard2) nHealCard1 -= FIRST_AID_LV_UP2;
   return nHealCard1;
@@ -409,10 +409,10 @@ function healNCardRevise() {
 
 /*****  Data Logic Checking  *****/
 function limitCheck() {
-  var nMaxEnergy = rules.maxenergy + rules_addon.maxenergy;
-  var nMaxDurability = rules.maxdur + rules_addon.maxdur;
-  var nMaxDay = rules.maxday + rules_addon.maxday;
-  var nWinCardNeed = rules.wincardneed + rules_addon.wincardneed;
+  let nMaxEnergy = rules.maxenergy + rules_addon.maxenergy;
+  let nMaxDurability = rules.maxdur + rules_addon.maxdur;
+  let nMaxDay = rules.maxday + rules_addon.maxday;
+  let nWinCardNeed = rules.wincardneed + rules_addon.wincardneed;
 
   if (ps.energy > nMaxEnergy) ps.energy = nMaxEnergy;
   if (ps.damage < 0) ps.damage = 0;
@@ -451,7 +451,7 @@ function limitCheck() {
 }
 
 function awardsCheck() {
-  for (var i = 0; i < awardinfo.awards.length; i++) {
+  for (let i = 0; i < awardinfo.awards.length; i++) {
     if (!awards[awardinfo.awards[i].name]) {
       if (awardinfo.awards[i].condition.operator == '>=') {
         if (this[awardinfo.awards[i].condition.type][awardinfo.awards[i].condition.field] >= awardinfo.awards[i].condition.target) {
@@ -472,8 +472,28 @@ function awardsCheck() {
 }
 
 function upgradeCheck() {
-  for (var i = 0; i < upgradeinfo.upgrades.length; i++) {
+  for (let i = 0; i < upgradeinfo.upgrades.length; i++) {
     if (!upgrade[upgradeinfo.upgrades[i].name]) {
+      if (typeof upgradeinfo.upgrades[i].require != 'undefined') {
+        let enabled = upgradeinfo.upgrades[i].require.enabled;
+        if (enabled.indexOf(',') == -1) {
+          if (!upgrade[enabled]) {
+            continue;
+          }
+        } else {
+          let enabledlist = enabled.split(',');
+          let skip = 0;
+          for (let i = 0; i < enabledlist.length; i++) {
+            if (!upgrade[enabledlist[i]]) {
+              skip = 1;
+              continue;
+            }
+          }
+          if (skip) {
+            continue;
+          }
+        }
+      }
       if (upgradeinfo.upgrades[i].condition.operator == '>=') {
         if (this[upgradeinfo.upgrades[i].condition.type][upgradeinfo.upgrades[i].condition.field] >= upgradeinfo.upgrades[i].condition.target) {
           $('#' + upgradeinfo.upgrades[i].name + ' .button.inactive').removeClass('inactive');
@@ -495,8 +515,8 @@ function upgradeCheck() {
 /*****  Item Update  *****/
 function itemAdd(card) {
   if (card.indexOf(',') != -1) {
-    var cards = card.split(',');
-    for (var i = 0; i < cards.length; i++) {
+    let cards = card.split(',');
+    for (let i = 0; i < cards.length; i++) {
       itemPush(cards[i]);
     }
   } else {
@@ -511,9 +531,9 @@ function itemPush(card) {
     case 'SR': items.sr += 1; counter.attack = 0; counter.luck += 1; break;
     case 'UR': items.ur += 1; counter.attack = 0; counter.luck += 1; break;
   }
-  var nDepressionLevel = rules.depression + rules_addon.depression + getRandom(rules_random.depression_min,rules_random.depression_max);
+  let nDepressionLevel = rules.depression + rules_addon.depression + getRandom(rules_random.depression_min,rules_random.depression_max);
   if (counter.attack >= nDepressionLevel) {
-    var attackDamage = damageRevise();
+    let attackDamage = damageRevise();
     counter.attack = 0;
     ps.damage += attackDamage;
     lifetime.damage += attackDamage;
@@ -524,14 +544,14 @@ function itemPush(card) {
 
 /*****  Data Save/Load Handling  *****/
 function dataSave(options) {
-  var playdata = {
+  let playdata = {
     player: player,
     items: items,
     ps: ps,
     talent: talent,
     rolelock: rolelock
   }
-  var enc = btoa(JSON.stringify(playdata));
+  let enc = btoa(JSON.stringify(playdata));
   createCookie("playerstatus",enc);
   dataLifeTimeSave();
   // if (options != 'mute') {
@@ -540,19 +560,19 @@ function dataSave(options) {
 }
 
 function dataLifeTimeSave() {
-  var statisticdata = {
+  let statisticdata = {
     lifetime: lifetime,
     upgrade: upgrade,
     awards: awards
   }
-  var enc = btoa(JSON.stringify(statisticdata));
+  let enc = btoa(JSON.stringify(statisticdata));
   createCookie("playerawards",enc);
 }
 
 function dataLoad() {
-  var enc = readCookie("playerstatus");
+  let enc = readCookie("playerstatus");
   if (enc != null) {
-    var dnc = $.parseJSON(atob(enc));
+    let dnc = $.parseJSON(atob(enc));
     rules = $.extend(true, {}, originaldata.rules);
     rules_addon = $.extend(true, {}, originaldata.rules_addon);
     player = dnc.player;
@@ -561,9 +581,9 @@ function dataLoad() {
     talent = dnc.talent;
     rolelock = dnc.rolelock;
     counter = $.extend(true, {}, originaldata.counter);
-    var enc2 = readCookie("playerawards");
+    let enc2 = readCookie("playerawards");
     if (enc2 != null) {
-      var dnc2 = $.parseJSON(atob(enc2));
+      let dnc2 = $.parseJSON(atob(enc2));
       lifetime = dnc2.lifetime;
       upgrade = dnc2.upgrade;
       awards = dnc2.awards;
@@ -596,8 +616,8 @@ function initOriginal() {
 }
 
 function initItems() {
-  for (var label in items) {
-    var elem = $('<li></li>').html('<label>' + label.toUpperCase() + '</label><br /><span></span>').attr('id','card' + label);
+  for (let label in items) {
+    let elem = $('<li></li>').html('<label>' + label.toUpperCase() + '</label><br /><span></span>').attr('id','card' + label);
     $('#item-list').append(elem);
   }
 }
@@ -605,8 +625,8 @@ function initItems() {
 function initAwards(hash) {
   awardinfo = getJSONData(hash);
   if (typeof awardinfo.awards != 'undefined') {
-    for (var i = 0; i < awardinfo.awards.length; i++) {
-      var elem = $('<li></li>').text(awardinfo.awards[i].desc.short).attr('id',awardinfo.awards[i].name).css({'color':awardinfo.awards[i].badge.textcolor,'background-color':awardinfo.awards[i].badge.bgcolor}).addClass('inactive');
+    for (let i = 0; i < awardinfo.awards.length; i++) {
+      let elem = $('<li></li>').text(awardinfo.awards[i].desc.short).attr('id',awardinfo.awards[i].name).css({'color':awardinfo.awards[i].badge.textcolor,'background-color':awardinfo.awards[i].badge.bgcolor}).addClass('inactive');
       $('#badge-list').append(elem);
     }
   }
@@ -615,8 +635,8 @@ function initAwards(hash) {
 function initUpgrades(hash) {
   upgradeinfo = getJSONData(hash);
   if (typeof upgradeinfo.upgrades != 'undefined') {
-    for (var i = 0; i < upgradeinfo.upgrades.length; i++) {
-      var elem = $('<div></div>').attr('id',upgradeinfo.upgrades[i].name);
+    for (let i = 0; i < upgradeinfo.upgrades.length; i++) {
+      let elem = $('<div></div>').attr('id',upgradeinfo.upgrades[i].name);
       $('#upgrade-list').append(elem);
       $('<div class="button">' + upgradeinfo.upgrades[i].desc.short + '</div>').css({'color':upgradeinfo.upgrades[i].color.text,'background-color':upgradeinfo.upgrades[i].color.background}).addClass('inactive').appendTo('#' + upgradeinfo.upgrades[i].name);
       $('<div class="desc">' + upgradeinfo.upgrades[i].desc.long + '</div>').appendTo('#' + upgradeinfo.upgrades[i].name);

@@ -14,7 +14,7 @@ function timeValidate(time) {
 }
 
 function codeFilter(text) {
-   return text.replace(/[^a-z0-9]/gi,'');
+  return text.replace(/[^a-z0-9]/gi,'');
 }
 
 function numberFilter(text) {

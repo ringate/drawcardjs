@@ -104,6 +104,7 @@ function debugLogger(action) {
 }
 
 function debugTableUpdate() {
+  debug_counter++;
   Object.keys(ps).forEach(function(elem) {
     let tempdata = $('#last-'+elem).html();
     $('#last-'+elem).html(tempdata+'<br />'+ps[elem]);
@@ -116,5 +117,4 @@ function debugTableUpdate() {
     $('#reset').click();
     $('#robot-on').click();
   }
-  debug_counter++;
 }
