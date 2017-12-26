@@ -47,7 +47,7 @@ function talentUpdate() {
 
 /*****  Frontend Message Handling  *****/
 function messageUpdate(msg, color = '#000', bgcolor = '#FFF') {
-  $('#lastmsg').html("<span>" + msg + "</span>").css({'color':color,'background-color':bgcolor});
+  $('.lastmsg').html("<span>" + msg + "</span>").css({'color':color,'background-color':bgcolor});
 }
 
 function badgeInfo(msg, color = '#000', bgcolor = '#FFF') {
@@ -65,20 +65,11 @@ function logClear() {
 /*****  Frontend Update  *****/
 
 /*****  Game Logic  *****/
-/*****  Core Game Functions  *****/
-function getRandom(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function cardDraw(type, hash) {
-  var level = 0;
-  if (upgrade.redrawn) level++;
-  if (upgrade.redrawnr) level++;
-  $.get({
-    url: 'ajax.php',
-    data: { type: type, hash: hash, level: level },
-  }).done(function(card) {
-    if (card == 'error') return false;
+/*****  Card Draw Logic  *****/
+function cardDraw(hash) {
+  let drawrule = getJSONData(hash);
+  if (typeof drawrule.pool == 'object') {
+    card = rand_sum(drawrule.pool, drawrule.time);
     if (card.indexOf(',') != -1) {
       var cards = card.split(',');
       lifetime.draw += cards.length;
@@ -96,7 +87,106 @@ function cardDraw(type, hash) {
     itemUpdate();
     statusUpdate();
     cardLog(card);
+  }
+}
+
+function rand_sum(pool, time = 1) {
+  let result = [];
+  let level = 0;
+  if (upgrade.redrawn) level++;
+  if (upgrade.redrawnr) level++;
+  if (typeof pool != 'object') return result.join();
+  if (Object.keys(pool).length == 0) return result.join();
+
+  let box = [];
+  Object.keys(pool).forEach(function(card) {
+    for (let i = 0; i < pool[card]; i++) {
+      box.push(card);
+    }
   });
+  shuffle(box);
+
+  let j = 0;
+  let k = 0;
+  let l = 0;
+  let rand = 0;
+  for (let i = 0; i < box.length; i++) {
+    if (j < time) {
+      if ( (level >= 1) && (!k) && (box[i] == 'N') ) {
+        rand = getRandom(1, 10);
+        if (rand == 1) {
+          console.log('trigger: redraw N');
+          k = 1;
+          continue;
+        }
+      }
+      if ( (level >= 2) && (!l) && ( (box[i] == 'N') || (box[i] == 'R') ) ) {
+        rand = getRandom(1, 10);
+        if (rand == 1) {
+          console.log('trigger: redraw R');
+          k = 1;
+          l = 1;
+          continue;
+        }
+      }
+      result.push(box[i]);
+      k = 0;
+      l = 0;
+      j++;
+    } else {
+      break;
+    }
+  }
+  return result.join();
+}
+
+function rand_percent(pool, time = 1) {
+  let result = [];
+  let level = 0;
+  if (upgrade.redrawn) level++;
+  if (upgrade.redrawnr) level++;
+  if (typeof pool != 'object') return result.join();
+  if (Object.keys(pool).length == 0) return result.join();
+
+  let box = {};
+  let min = 0;
+  let max = 0;
+  Object.keys(pool).forEach(function(card) {
+    min = max + 1;
+    max = min + (pool[card] * 1000) - 1;
+    box[card] = [min,max];
+  });
+  let j = 0;
+  for (let i = 0; i < time; i++) {
+    rand = getRandom(1, max);
+    j = 0;
+    Object.keys(box).forEach(function(card) {
+      if ( (box[card][0] <= rand) && (box[card][1] >= rand) && (!j) ) {
+        result.push(card);
+        j = 1;
+      }
+    });
+  }
+  return result.join();
+}
+/*****  Card Draw Logic  *****/
+
+/*****  Core Game Functions  *****/
+function getJSONData(hash) {
+  var jsonobj = null;
+  switch (hash) {
+    case codeGen(1): jsonfile = 'sum'; break;
+    case codeGen(10): jsonfile = 'sum10'; break;
+    case codeGen('awards'): jsonfile = 'awards'; break;
+    case codeGen('upgrades'): jsonfile = 'upgrades'; break;
+    case codeGen('talents'): jsonfile = 'talents'; break;
+  }
+  if (jsonfile != '') {
+    $.getJSON('json/' + jsonfile + '.json', function(data) {
+      jsonobj = data;
+    });
+  }
+  return jsonobj;
 }
 
 function worldReset() {
@@ -512,27 +602,19 @@ function initItems() {
   }
 }
 
-function initAwards(type, hash) {
-  $.get({
-    url: 'ajax.php',
-    data: { type: type, hash: hash },
-  }).done(function(data) {
-    if (data == 'error') return false;
-    awardinfo = $.parseJSON(data);
+function initAwards(hash) {
+  awardinfo = getJSONData(hash);
+  if (typeof awardinfo.awards != 'undefined') {
     for (var i = 0; i < awardinfo.awards.length; i++) {
       var elem = $('<li></li>').text(awardinfo.awards[i].desc.short).attr('id',awardinfo.awards[i].name).css({'color':awardinfo.awards[i].badge.textcolor,'background-color':awardinfo.awards[i].badge.bgcolor}).addClass('inactive');
       $('#badge-list').append(elem);
     }
-  });
+  }
 }
 
-function initUpgrades(type, hash) {
-  $.get({
-    url: 'ajax.php',
-    data: { type: type, hash: hash },
-  }).done(function(data) {
-    if (data == 'error') return false;
-    upgradeinfo = $.parseJSON(data);
+function initUpgrades(hash) {
+  upgradeinfo = getJSONData(hash);
+  if (typeof upgradeinfo.upgrades != 'undefined') {
     for (var i = 0; i < upgradeinfo.upgrades.length; i++) {
       var elem = $('<div></div>').attr('id',upgradeinfo.upgrades[i].name);
       $('#upgrade-list').append(elem);
@@ -540,17 +622,11 @@ function initUpgrades(type, hash) {
       $('<div class="desc">' + upgradeinfo.upgrades[i].desc.long + '</div>').appendTo('#' + upgradeinfo.upgrades[i].name);
       $('#' + upgradeinfo.upgrades[i].name).append('<div class="clear"></div>');
     }
-  });
+  }
 }
 
-function initTalent(type, hash) {
-  $.get({
-    url: 'ajax.php',
-    data: { type: type, hash: hash },
-  }).done(function(data) {
-    if (data == 'error') return false;
-    talentinfo = $.parseJSON(data);
-  });
+function initTalent(hash) {
+  talentinfo = getJSONData(hash);
 }
 
 function roundReset() {
@@ -578,9 +654,9 @@ function runOnce() {
   $.ajaxSetup({async:false});
   initOriginal();
   initItems();
-  initAwards('custom','95e777b1daaacd8870c480bb35293b53754e5e832896260b863f41e52ac05edf');
-  initUpgrades('custom','ee943dc49fcbfff114b8e5772951cddb2f5204a5d5c6379d3f609261c6db34b9');
-  initTalent('custom','aa71c311a2c73de593a95fb2fed2d3e1289deac3bc3f73b56ef7c38e0642a4b0');
+  initAwards('95e777b1daaacd8870c480bb35293b53754e5e832896260b863f41e52ac05edf');
+  initUpgrades('ee943dc49fcbfff114b8e5772951cddb2f5204a5d5c6379d3f609261c6db34b9');
+  initTalent('aa71c311a2c73de593a95fb2fed2d3e1289deac3bc3f73b56ef7c38e0642a4b0');
   roundReset();
   dataLoad();
   if (DEBUG_MODE) {

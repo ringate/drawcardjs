@@ -7,20 +7,16 @@ var debug_counter = 0;
 
 $(document).ready(function() {
   if (ROBOT_MODE) {
-    $('#command-list2').append('<li id="robot">Robot</li><li id="robot-on">On</li><li id="robot-off" class="selected">Off</li>');
-    $('body').append('<div class="column"><div id="debug-history"><div id="last-dayused" class="cols">Days</div><div id="last-energy" class="cols">Energy</div><div id="last-damage" class="cols">Damage</div><div id="last-items-n" class="cols">N</div><div id="last-items-r" class="cols">R</div><div id="last-items-sr" class="cols">SR</div><div id="last-items-ur" class="cols">UR</div><div class="clear"></div></div></div><div class="clear"></div>');
+    $('#command-list2').append('<li id="robot-on">Robot On</li><li id="robot-off" class="selected">Robot Off</li>');
+    $('body').append('<div class="column"><div id="debug-history"><div id="last-dayused" class="cols"><u>Days</u></div><div id="last-energy" class="cols"><u>Energy</u></div><div id="last-damage" class="cols"><u>Damage</u></div><div id="last-items-n" class="cols"><u>N</u></div><div id="last-items-r" class="cols"><u>R</u></div><div id="last-items-sr" class="cols"><u>SR</u></div><div id="last-items-ur" class="cols"><u>UR</u></div><div class="clear"></div></div></div><div class="clear"></div>');
   }
 }());
-
-$('#robot').on('click', function() {
-  robotPlay();
-});
 
 $('#robot-on').on('click', function() {
   ROBOT_STATUS = 1;
   $('li[id^="robot-"]').removeClass('selected');
   $(this).addClass('selected');
-  $('#robot').click();
+  robotPlay();
 });
 
 $('#robot-off').on('click', function() {

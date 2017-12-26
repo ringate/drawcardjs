@@ -1,0 +1,29 @@
+{
+  "name": "drawcard",
+  "authors": [
+    "Ringate <ringate@gmail.com>"
+  ],
+  "description": "Draw Card Game Play Logic",
+  "main": "index.html",
+  "keywords": [
+    "draw",
+    "card",
+    "game",
+    "sim",
+    "badge",
+    "upgrade"
+  ],
+  "license": "MIT",
+  "homepage": "http://www.mondayhater.net/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "js-sha256": "^0.9.0"
+  }
+}

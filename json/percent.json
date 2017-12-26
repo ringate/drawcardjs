@@ -1,6 +1,7 @@
 {
   "type": "percent",
   "status": 1,
+  "time": 1,
   "pool": {
     "N": 5,
     "R": 3.5,

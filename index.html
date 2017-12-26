@@ -3,9 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-<title>Draw Card v0.6</title>
-<script src="js/jquery.min.js"></script>
+<title>Draw Card v0.7</title>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/js-sha256/build/sha256.min.js"></script>
 <script src="js/cookie.js"></script>
+<script src="js/general.js"></script>
 <script src="js/data.js"></script>
 <script src="js/core.js"></script>
 <link rel="stylesheet" type="text/css" href="css/styles.css" />
@@ -55,7 +57,7 @@
     <div class="clear"></div>
   </div>
   <hr />
-  <div id="lastmsg"></div>
+  <div class="lastmsg"></div>
 </div>
 <div class="column">
   <div id="upgrade-list"></div>
@@ -68,6 +70,11 @@
 </div>
 <div class="column">
   <div id="history-list">
+    <div>v0.7</div>
+    <ul>
+      <li>Changed draw card and init data logic by JS instead of PHP.</li>
+      <li>Using bower for JS library.</li>
+    </ul>
     <div>v0.6</div>
     <ul>
       <li>Added robot for build and analysis game balance.</li>

@@ -1,6 +1,7 @@
 $(document).ready(function() {
   if (typeof window.orientation !== 'undefined') {
     $('body').append('<ul id="tab-list"><li>Draw</li><li>Upgrade</li><li>Badge</li><li>History</li></ul>')
+    $('#upgrade-list').parent().prepend('<div class="lastmsg"></div><hr />');
     if (ROBOT_MODE) {
       var elem = $('<li></li>').text('Robot');
       $('#tab-list').append(elem);

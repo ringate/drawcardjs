@@ -1,8 +1,8 @@
 $('#draw').on('click', function() {
-  cardDraw('normal','697df868b85bd393d902eb493f3308f5b9942ede19be2eed5934f27bb73e07e5');
+  cardDraw('697df868b85bd393d902eb493f3308f5b9942ede19be2eed5934f27bb73e07e5');
 });
 $('#draw10').on('click', function() {
-  cardDraw('normal','55e32a48ffa3bd05583081747a843fee8972c02458099dc81ad1101daf87424f');
+  cardDraw('55e32a48ffa3bd05583081747a843fee8972c02458099dc81ad1101daf87424f');
 });
 $('#sleep').on('click', function() {
   sleepRestore();
